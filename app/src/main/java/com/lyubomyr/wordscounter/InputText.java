@@ -8,24 +8,74 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 public class InputText extends AppCompatActivity {
+
+    protected String text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_text);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final EditText inputText = (EditText) findViewById(R.id.inputText);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                text = inputText.getText().toString();
+                Snackbar.make(view, "Calculating words, please wait...", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                displayResults(text);
             }
         });
+    }
+
+    protected void displayResults(String results){
+        RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
+        //mainLayout.setVisibility(View.INVISIBLE);
+        EditText inputText = (EditText) findViewById(R.id.inputText);
+        inputText.setVisibility(View.INVISIBLE);
+
+        final int resultsLayoutId = View.generateViewId();
+        final int resultsBackButtonId = View.generateViewId();
+
+        LinearLayout resultsLayout = new LinearLayout(this);
+        resultsLayout.setOrientation(LinearLayout.HORIZONTAL);
+        resultsLayout.setMinimumHeight(mainLayout.getHeight());
+        resultsLayout.setMinimumWidth(mainLayout.getWidth());
+        resultsLayout.setId(resultsLayoutId);
+
+        Button hideResultsButton = new Button(this);
+        hideResultsButton.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT));
+
+        hideResultsButton.setId(resultsBackButtonId);
+
+        hideResultsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LinearLayout resultsLayout = (LinearLayout) findViewById(resultsLayoutId);
+                resultsLayout.setVisibility(View.INVISIBLE);
+
+                EditText inputText = (EditText) findViewById(R.id.inputText);
+                inputText.setVisibility(View.VISIBLE);
+
+                Button hideResultsButton = (Button) findViewById(resultsBackButtonId);
+                hideResultsButton.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        resultsLayout.addView(hideResultsButton);
+
+        mainLayout.addView(resultsLayout);
     }
 
     @Override

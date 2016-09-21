@@ -10,10 +10,18 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.lyubomyr.wordscounter.InputText"
-    tools:showIn="@layout/activity_input_text">
+    tools:showIn="@layout/activity_input_text"
+    android:id="@+id/mainLayout">
 
-    <TextView
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:id="@+id/inputText"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:editable="true"
+        android:layout_alignParentBottom="true"
+        android:singleLine="false"
+        android:gravity="top" />
 </RelativeLayout>
