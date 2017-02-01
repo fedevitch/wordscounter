@@ -44,10 +44,6 @@ public class InputText extends AppCompatActivity {
                 Snackbar.make(view, "Calculating words, please wait...", Snackbar.LENGTH_INDEFINITE)
                         .setAction("", null).show();
 
-                while(!wordCounter.resultsReady){
-                    //поки нема результатів - валяти х..
-                }
-
                 Snackbar.make(view, "Words calculated", Snackbar.LENGTH_INDEFINITE)
                         .setAction("Show results",new View.OnClickListener() {
                             @Override

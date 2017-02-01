@@ -17,13 +17,13 @@ public class WordCounter {
     private int charsCount;
     private List<String> wordsVocabulary;
     private List<Integer> word_used;
-    private List<String> wordStatistics;
+    public List<String> wordStatistics;
 
     private List<Character> charactersVocabulary;
     private List<Integer> characters_used;
-    private List<String> charStatistics;
+    public List<String> charStatistics;
 
-    private String charset;
+    public String charset;
 
     public Boolean resultsReady;
 
@@ -154,14 +154,13 @@ public class WordCounter {
             }
         }
         this.resultsReady = true;
-        return;
     }
 
     public void startCounting(String text){
         String chars = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                 + "абвгґдеєжзиіїйклмнопрстуфхцчшщьюяАБВГҐДЕЄЖЗИІЇКЛМНОПРСТУФХЦЧШЩЬЮЯ"
                 + "1234567890~_Ⓡ    \n\t";
-        String charsToIgnore = " .,;:!?+=*-~`  {(//<[]>)}\"\'|&\n\t  \\    ";//chars to ignore
+        String charsToIgnore = " .,;:!?+=*-~`  {(//<[]>)}\"\'|&\n\t  \\    ";
 
 
 
