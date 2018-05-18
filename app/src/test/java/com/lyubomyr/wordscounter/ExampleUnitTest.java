@@ -1,6 +1,7 @@
 package com.lyubomyr.wordscounter;
 
 import org.junit.Test;
+import com.lyubomyr.wordscounter.WordCounter;
 
 import static org.junit.Assert.*;
 
