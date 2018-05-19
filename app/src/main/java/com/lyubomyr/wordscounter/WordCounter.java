@@ -13,6 +13,9 @@ import java.util.function.Function;
 
 public class WordCounter {
 
+    private List<Word> words;
+    private List<WordChar> chars;
+
     private int wordsCount;
     private int charsCount;
     private List<String> wordsVocabulary;
@@ -64,6 +67,7 @@ public class WordCounter {
 
         if (this.charactersVocabulary.isEmpty())
         {
+            this.chars.add(new WordChar(s));
             this.write_to_voc_char(s);
             return 1;
         }
@@ -74,6 +78,8 @@ public class WordCounter {
                 if (this.charactersVocabulary.get(i).equals(s))
                 {
                     //слово вже є в словнику, додати до лічильника 1 і вийти
+                    this.chars.get(i).incrementAppearsCount();
+
                     int index = this.characters_used.get(i)+1;
                     this.characters_used.set(i, index);
                     return 0;
@@ -83,6 +89,8 @@ public class WordCounter {
                     if(i == this.charactersVocabulary.size() - 1)//список пройдено, збігів не знайдено
                     {
                         //додаємо слово до списку
+                        this.chars.add(new WordChar(s));
+
                         this.write_to_voc_char(s);
                         return 1;
                     }
@@ -100,9 +108,13 @@ public class WordCounter {
         {
             this.compareChar(s.charAt(i));
         }
+
+
+
         if (this.wordsVocabulary.isEmpty())
         {
             write_to_voc(s);
+            this.words.add(new Word(s));
             return 1;
         }
         else
@@ -112,6 +124,8 @@ public class WordCounter {
                 if (this.wordsVocabulary.get(i).equals(s))
                 {
                     //слово вже є в словнику, додати до лічильника 1 і вийти
+                    this.words.get(i).incrementAppearsCount();
+                    //legacy
                     int index = this.word_used.get(i)+1;
                     this.word_used.set(i, index);
                     this.wordsCount++;
@@ -122,6 +136,9 @@ public class WordCounter {
                     if(i == this.wordsVocabulary.size() - 1)//список пройдено, збігів не знайдено
                     {
                         //додаємо слово до списку
+                        this.words.add(new Word(s));
+
+                        //legacy
                         this.write_to_voc(s);
                         return 1;
                     }
