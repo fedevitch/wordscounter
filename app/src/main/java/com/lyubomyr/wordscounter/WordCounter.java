@@ -46,6 +46,9 @@ public class WordCounter {
         this.characters_used = new ArrayList<Integer>();
         this.charStatistics = new ArrayList<String>();
 
+        this.words = new ArrayList<Word>();
+        this.chars = new ArrayList<WordChar>();
+
     }
 
     private void write_to_voc(String s)//записує слово до словника
@@ -62,14 +65,14 @@ public class WordCounter {
 
     }
 
-    private int compareChar(char s)// функція виявлення нових букв
+    private void compareChar(char s)// функція виявлення нових букв
     {                           //і збільшення індексу, якщо така буква вже зустрічалось
 
         if (this.charactersVocabulary.isEmpty())
         {
             this.chars.add(new WordChar(s));
             this.write_to_voc_char(s);
-            return 1;
+            return;
         }
         else
         {
@@ -82,7 +85,7 @@ public class WordCounter {
 
                     int index = this.characters_used.get(i)+1;
                     this.characters_used.set(i, index);
-                    return 0;
+                    return;
                 }
                 else
                 {
@@ -92,15 +95,15 @@ public class WordCounter {
                         this.chars.add(new WordChar(s));
 
                         this.write_to_voc_char(s);
-                        return 1;
+                        return;
                     }
                 }
             }
         }
-        return 0;
+        return;
     }
 
-    private int compareString(String s)// функція виявлення нових слів
+    private void compareString(String s)// функція виявлення нових слів
     {                           //і збільшення індексу, якщо таке слово вже зустрічалось
         //StringTokenizer str = new StringTokenizer(s);
         this.charsCount += s.length();
@@ -108,45 +111,40 @@ public class WordCounter {
         {
             this.compareChar(s.charAt(i));
         }
-
-
+        Log.d("DEBUG","chars processed");
 
         if (this.wordsVocabulary.isEmpty())
         {
             write_to_voc(s);
             this.words.add(new Word(s));
-            return 1;
+            return;
         }
         else
         {
-            for (int i = 0; i < this.wordsVocabulary.size(); i++)
-            {
-                if (this.wordsVocabulary.get(i).equals(s))
-                {
+            for (int i = 0; i < this.wordsVocabulary.size(); i++) {
+                if (this.wordsVocabulary.get(i).equals(s)) {
                     //слово вже є в словнику, додати до лічильника 1 і вийти
                     this.words.get(i).incrementAppearsCount();
                     //legacy
-                    int index = this.word_used.get(i)+1;
+                    int index = this.word_used.get(i) + 1;
                     this.word_used.set(i, index);
                     this.wordsCount++;
-                    return 0;
-                }
-                else
-                {
-                    if(i == this.wordsVocabulary.size() - 1)//список пройдено, збігів не знайдено
-                    {
+                    return;
+                } else {
+                    if (i == this.wordsVocabulary.size() - 1)//список пройдено, збігів не знайдено                   {
+
                         //додаємо слово до списку
                         this.words.add(new Word(s));
 
-                        //legacy
-                        this.write_to_voc(s);
-                        return 1;
-                    }
+                    //legacy
+                    this.write_to_voc(s);
+                    return;
                 }
             }
         }
-        return 0;
     }
+
+
 
     private void find(String text, String ignored_chars)//пошук слів і операторів
     {
@@ -168,6 +166,8 @@ public class WordCounter {
 
             }catch (Exception e){
                 Log.e("Error","Помилка при відсіюванні групи: "+ignored_chars);
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
             }
         }
         this.resultsReady = true;
