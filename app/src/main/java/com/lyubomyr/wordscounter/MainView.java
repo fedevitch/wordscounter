@@ -3,28 +3,27 @@ package com.lyubomyr.wordscounter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-public class InputTextView extends AppCompatActivity {
+public class MainView extends AppCompatActivity {
 
     private String LOG_TAG = "MAIN_VIEW";
 
     protected String text;
     protected WordCounter wordCounter;
 
-    EditText inputText;
+    private EditText inputText;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +32,9 @@ public class InputTextView extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         inputText = (EditText) findViewById(R.id.inputText);
         setSupportActionBar(toolbar);
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
         //wordCounter = new WordCounter();
 
@@ -43,6 +45,53 @@ public class InputTextView extends AppCompatActivity {
                 startCount(view);
             }
         });
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        // set item as selected to persist highlight
+                        menuItem.setChecked(true);
+                        // close drawer when item is tapped
+                        mDrawerLayout.closeDrawers();
+
+                        // Add code here to update the UI based on the item selected
+                        // For example, swap UI fragments here
+
+                        return true;
+                    }
+                });
+
+        mDrawerLayout.addDrawerListener(
+                new DrawerLayout.DrawerListener() {
+                    @Override
+                    public void onDrawerSlide(View drawerView, float slideOffset) {
+                        // Respond when the drawer's position changes
+                        Log.d(LOG_TAG, "slide");
+                    }
+
+                    @Override
+                    public void onDrawerOpened(View drawerView) {
+                        // Respond when the drawer is opened
+                        Log.d(LOG_TAG, "opened");
+                    }
+
+                    @Override
+                    public void onDrawerClosed(View drawerView) {
+                        // Respond when the drawer is closed
+                        Log.d(LOG_TAG, "closed");
+                    }
+
+                    @Override
+                    public void onDrawerStateChanged(int newState) {
+                        // Respond when the drawer motion state changes
+                        Log.d(LOG_TAG, "changed");
+                    }
+                }
+        );
     }
 
     protected void startCount(View view) {
@@ -51,25 +100,29 @@ public class InputTextView extends AppCompatActivity {
 
         wordCounter.startCounting(text);
 
-        Snackbar.make(view, "Calculating words, please wait...", Snackbar.LENGTH_INDEFINITE)
-                .setAction("", null).show();
+        String result = wordCounter.getResult();
+        Log.d(LOG_TAG, result);
+        showResultsView(result);
 
-        Snackbar.make(view, "Words calculated", Snackbar.LENGTH_INDEFINITE)
-                .setAction("Show results",new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //displayResults(wordCounter.getResult());
-                        String result = wordCounter.getResult();
-                        Log.d(LOG_TAG, result);
-                        showResultsView(result);
-                    }
-                }).show();
+//        Snackbar.make(view, "Calculating words, please wait...", Snackbar.LENGTH_INDEFINITE)
+//                .setAction("", null).show();
+//
+//        Snackbar.make(view, "Words calculated", Snackbar.LENGTH_INDEFINITE)
+//                .setAction("Show results",new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        //displayResults(wordCounter.getResult());
+//                        String result = wordCounter.getResult();
+//                        Log.d(LOG_TAG, result);
+//                        showResultsView(result);
+//                    }
+//                }).show();
     }
 
     protected void showResultsView(String result) {
-        Intent showResults = new Intent(InputTextView.this, DisplayResultsView.class);
+        Intent showResults = new Intent(MainView.this, DisplayResultsView.class);
         showResults.putExtra("results", result);
-        InputTextView.this.startActivity(showResults);
+        MainView.this.startActivity(showResults);
     }
 
     // obsolete method
@@ -134,6 +187,8 @@ public class InputTextView extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        /*
+        //obsolete
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -144,6 +199,14 @@ public class InputTextView extends AppCompatActivity {
             return true;
         }
 
+        return super.onOptionsItemSelected(item);
+        */
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 }

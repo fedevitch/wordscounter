@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.lyubomyr.wordscounter.InputTextView">
+    tools:context="com.lyubomyr.wordscounter.MainView">
 
     <include layout="@layout/app_header" />
 
