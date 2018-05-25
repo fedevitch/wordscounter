@@ -121,7 +121,7 @@ public class WordCounter {
         }
         else
         {
-            for (int i = 0; i < this.wordsVocabulary.size(); i++) {
+            for (int i = 0; i <= this.wordsVocabulary.size(); i++) {
                 if (this.wordsVocabulary.get(i).equals(s)) {
                     //слово вже є в словнику, додати до лічильника 1 і вийти
                     this.words.get(i).incrementAppearsCount();
@@ -131,14 +131,15 @@ public class WordCounter {
                     this.wordsCount++;
                     return;
                 } else {
-                    if (i == this.wordsVocabulary.size() - 1)//список пройдено, збігів не знайдено                   {
+                    if (i == this.wordsVocabulary.size() - 1){ //список пройдено, збігів не знайдено
 
                         //додаємо слово до списку
                         this.words.add(new Word(s));
 
-                    //legacy
-                    this.write_to_voc(s);
-                    return;
+                        //legacy
+                        this.write_to_voc(s);
+                        return;
+                    }
                 }
             }
         }
