@@ -11,7 +11,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:layout_gravity="bottom|end"
     tools:context="com.lyubomyr.wordscounter.MainView"
-    tools:showIn="@layout/activity_enter_text_view"
+    tools:showIn="@layout/main_view"
     android:id="@+id/mainLayout">
 
     <EditText

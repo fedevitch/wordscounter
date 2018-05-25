@@ -15,14 +15,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <include layout="@layout/content_input_text" />
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
-
-        <include layout="@layout/content_input_text" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
