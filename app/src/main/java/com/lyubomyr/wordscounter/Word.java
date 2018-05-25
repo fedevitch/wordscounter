@@ -1,5 +1,6 @@
 package com.lyubomyr.wordscounter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Word {
@@ -13,6 +14,7 @@ public class Word {
         this.word = word;
         this.appearsCount = 1;
         this.charsCount = word.length();
+        this.uniqueChars = new ArrayList<Character>();
         this.calculateUniqueChars();
     }
 
