@@ -21,7 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class InputTextView extends AppCompatActivity {
+public class MainView extends AppCompatActivity {
 
     private String LOG_TAG = "MAIN_VIEW";
 
@@ -126,9 +126,9 @@ public class InputTextView extends AppCompatActivity {
     }
 
     protected void showResultsView(String result) {
-        Intent showResults = new Intent(InputTextView.this, DisplayResultsView.class);
+        Intent showResults = new Intent(MainView.this, DisplayResultsView.class);
         showResults.putExtra("results", result);
-        InputTextView.this.startActivity(showResults);
+        MainView.this.startActivity(showResults);
     }
 
     // obsolete method
