@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:layout_gravity="bottom|end"
-    tools:context="com.lyubomyr.wordscounter.MainView"
+    tools:context="com.lyubomyr.wordscounter.InputTextView"
     tools:showIn="@layout/activity_enter_text_view"
     android:id="@+id/mainLayout">
 
