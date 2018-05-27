@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">WordsCounter</string>
     <string name="action_settings">Settings</string>
+    <string name="action_exit">Exit</string>
+    <string name="drawer_menu_settings">Settings</string>
+    <string name="drawer_menu_new">New</string>
+    <string name="drawer_menu_history">History</string>
+    <string name="drawer_menu_exit">Exit</string>
 </resources>

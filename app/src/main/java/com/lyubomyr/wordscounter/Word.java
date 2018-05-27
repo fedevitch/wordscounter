@@ -7,7 +7,7 @@ public class Word {
     private String word;
     private int appearsCount;
     private int charsCount;
-    private List<Character> uniqueChars;
+    private List<Character> uniqueChars; //ToDo: use WordChar class instead of Character
     private int uniqueCharsCount;
 
     Word(String word) {
