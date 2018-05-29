@@ -33,6 +33,11 @@ public class DisplayResultsView extends AppCompatActivity {
 
         Intent intent = getIntent();
         this.results = intent.getStringExtra("results");
+        //CountResult countResult = (CountResult) intent.getSerializableExtra("countResult");
+
+        Log.d(LOG_TAG, "got data");
+        //Log.d(LOG_TAG, String.valueOf(countResult.getWordsVocabulary().size()));
+
 
         Log.d(LOG_TAG, "started activity");
 

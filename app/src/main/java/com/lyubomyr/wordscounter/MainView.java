@@ -19,6 +19,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import java.io.Serializable;
+
 public class MainView extends AppCompatActivity {
 
     private String LOG_TAG = "MAIN_VIEW";
@@ -115,7 +117,7 @@ public class MainView extends AppCompatActivity {
 
         String result = wordCounter.getResult();
         Log.d(LOG_TAG, result);
-        showResultsView(result);
+        showResultsView(wordCounter.getCountResult(), wordCounter.getResult());
 
 //        Snackbar.make(view, "Calculating words, please wait...", Snackbar.LENGTH_INDEFINITE)
 //                .setAction("", null).show();
@@ -132,9 +134,10 @@ public class MainView extends AppCompatActivity {
 //                }).show();
     }
 
-    protected void showResultsView(String result) {
+    protected void showResultsView(CountResult countResult, String result) {
 
         this.showResults.putExtra("results", result);
+        //this.showResults.putExtra("countResult", (Serializable) countResult);
         startActivity(this.showResults);
 
     }

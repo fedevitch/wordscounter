@@ -13,6 +13,15 @@ import java.util.function.Function;
 
 public class WordCounter {
 
+    public CountResult countResult;
+
+    public List<String> wordStatistics;
+    public List<String> charStatistics;
+
+    public String charset;
+
+    public Boolean resultsReady;
+
     private List<Word> words;
     private List<WordChar> chars;
 
@@ -20,21 +29,21 @@ public class WordCounter {
     private int charsCount;
     private List<String> wordsVocabulary;
     private List<Integer> word_used;
-    public List<String> wordStatistics;
+
 
     private List<Character> charactersVocabulary;
     private List<Integer> characters_used;
-    public List<String> charStatistics;
 
-    public String charset;
 
-    public Boolean resultsReady;
+
 
     WordCounter(){
         Log.d("DEBUG","called constructor");
 
         this.resultsReady = false;
         this.charset = "UTF-8";
+
+        this.countResult = new CountResult();
 
         this.wordsCount =  0;
         this.wordsVocabulary = new ArrayList<String>();
@@ -68,6 +77,14 @@ public class WordCounter {
     private void compareChar(char s)// функція виявлення нових букв
     {                           //і збільшення індексу, якщо така буква вже зустрічалось
 
+        if(this.countResult.isPresent(s)){
+            this.countResult.incrementCharAppearsCount(s);
+        } else {
+            this.countResult.addNewChar(s);
+        }
+
+        //legacy part
+
         if (this.charactersVocabulary.isEmpty())
         {
             this.chars.add(new WordChar(s));
@@ -100,7 +117,6 @@ public class WordCounter {
                 }
             }
         }
-        return;
     }
 
     private void compareString(String s)// функція виявлення нових слів
@@ -112,6 +128,14 @@ public class WordCounter {
             this.compareChar(s.charAt(i));
         }
         Log.d("DEBUG","chars processed");
+
+        if(this.countResult.isPresent(s)){
+            this.countResult.incrementWordAppearsCount(s);
+        } else {
+            this.countResult.addNewWord(s);
+        }
+
+        //legacy part
 
         if (this.wordsVocabulary.isEmpty())
         {
@@ -213,4 +237,7 @@ public class WordCounter {
         return message + "\n" + info;
     }
 
+    public CountResult getCountResult() {
+        return countResult;
+    }
 }

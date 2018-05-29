@@ -4,7 +4,7 @@ public class WordChar {
     private Character wordCharacter;
     private int appearsCount;
 
-    WordChar(Character c){
+    WordChar(char c){
         this.wordCharacter = c;
         this.appearsCount = 1;
     }
