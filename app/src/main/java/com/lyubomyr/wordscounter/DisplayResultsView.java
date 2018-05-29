@@ -18,6 +18,9 @@ import android.widget.Toast;
 
 public class DisplayResultsView extends AppCompatActivity {
 
+    public static final String KEY_RESULTS = "RESULTS";
+    public static final String KEY_STRING_RESULTS = "STRING_RESULTS";
+
     private String LOG_TAG = "RESULTS_VIEW";
 
     protected String results;
@@ -31,23 +34,30 @@ public class DisplayResultsView extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Intent intent = getIntent();
-        this.results = intent.getStringExtra("results");
-        //CountResult countResult = (CountResult) intent.getSerializableExtra("countResult");
 
-        Log.d(LOG_TAG, "got data");
-        //Log.d(LOG_TAG, String.valueOf(countResult.getWordsVocabulary().size()));
 
 
         Log.d(LOG_TAG, "started activity");
 
+        Intent intent = getIntent();
 
-        if (null != results){
+        if (intent.hasExtra(KEY_STRING_RESULTS)){
+
+            this.results = intent.getStringExtra(KEY_STRING_RESULTS);
+
             Log.d(LOG_TAG, "displaying results");
             Log.d(LOG_TAG, results);
 
             TextView resultsTextView = (TextView) findViewById(R.id.resultsText);
             resultsTextView.setText(results);
+        }
+
+        if(intent.hasExtra(KEY_RESULTS)){
+            //CountResult countResult = (CountResult) intent.getSerializableExtra("countResult");
+
+            Log.d(LOG_TAG, "got data");
+            //Log.d(LOG_TAG, String.valueOf(countResult.getWordsVocabulary().size()));
+
         }
     }
 

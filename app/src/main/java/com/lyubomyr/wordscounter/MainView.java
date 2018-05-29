@@ -136,8 +136,9 @@ public class MainView extends AppCompatActivity {
 
     protected void showResultsView(CountResult countResult, String result) {
 
-        this.showResults.putExtra("results", result);
+        this.showResults.putExtra(DisplayResultsView.KEY_STRING_RESULTS, result);
         //this.showResults.putExtra("countResult", (Serializable) countResult);
+        this.showResults.putExtra(DisplayResultsView.KEY_RESULTS, "sss");
         startActivity(this.showResults);
 
     }
