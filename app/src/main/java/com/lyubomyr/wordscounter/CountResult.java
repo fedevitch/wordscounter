@@ -10,17 +10,27 @@ public class CountResult {
 
     private List<Word> wordsVocabulary;
     private List<WordChar> charsVocabulary;
+    private int wordsCount;
+    private int charsCount;
 
     private String LOG_TAG = "COUNT_RESULT";
 
     CountResult() {
         this.wordsVocabulary = new ArrayList<Word>();
         this.charsVocabulary = new ArrayList<WordChar>();
+        this.wordsCount = 0;
+        this.charsCount = 0;
     }
 
     CountResult(List<Word> words, List<WordChar> chars){
         this.wordsVocabulary = words;
         this.charsVocabulary = chars;
+        for(int i = 0; i < this.wordsVocabulary.size(); i++){
+            this.wordsCount += this.wordsVocabulary.get(i).getAppearsCount();
+        }
+        for(int i = 0; i < this.charsVocabulary.size(); i++){
+            this.charsCount += this.charsVocabulary.get(i).getAppearsCount();
+        }
     }
 
     public List<Word> getWordsVocabulary() {
@@ -29,6 +39,14 @@ public class CountResult {
 
     public List<WordChar> getCharsVocabulary() {
         return charsVocabulary;
+    }
+
+    public int getWordsCount() {
+        return wordsCount;
+    }
+
+    public int getCharsCount() {
+        return charsCount;
     }
 
     public boolean isPresent(Word word){
@@ -84,18 +102,22 @@ public class CountResult {
     }
 
     public void addNewWord(Word word){
+        this.wordsCount++;
         this.wordsVocabulary.add(word);
     }
 
     public void addNewWord(String word){
+        this.wordsCount++;
         this.wordsVocabulary.add(new Word(word));
     }
 
     public void addNewChar(WordChar character){
+        this.charsCount++;
         this.charsVocabulary.add(character);
     }
 
     public void addNewChar(char character){
+        this.charsCount++;
         this.charsVocabulary.add(new WordChar(character));
     }
 

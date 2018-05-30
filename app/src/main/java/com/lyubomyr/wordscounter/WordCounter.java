@@ -215,6 +215,7 @@ public class WordCounter {
 
     }
 
+    //legacy
     public String getResult(){
         String info = "Слова: \n";
         System.out.println("Preparing result. Unique words found: " + this.wordsVocabulary.size());

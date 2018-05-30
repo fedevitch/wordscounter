@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 /**
  * Created by lyubomyr on 18.05.18.
  */
@@ -22,6 +24,8 @@ public class DisplayResultsView extends AppCompatActivity {
     public static final String KEY_STRING_RESULTS = "STRING_RESULTS";
 
     private String LOG_TAG = "RESULTS_VIEW";
+
+    private Store store;
 
     protected String results;
 
@@ -34,11 +38,10 @@ public class DisplayResultsView extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-
-
         Log.d(LOG_TAG, "started activity");
 
+        //legacy
+        /*
         Intent intent = getIntent();
 
         if (intent.hasExtra(KEY_STRING_RESULTS)){
@@ -51,14 +54,41 @@ public class DisplayResultsView extends AppCompatActivity {
             TextView resultsTextView = (TextView) findViewById(R.id.resultsText);
             resultsTextView.setText(results);
         }
+        */
 
-        if(intent.hasExtra(KEY_RESULTS)){
-            //CountResult countResult = (CountResult) intent.getSerializableExtra("countResult");
+        Log.d(LOG_TAG, "trying to get data from store");
 
-            Log.d(LOG_TAG, "got data");
-            //Log.d(LOG_TAG, String.valueOf(countResult.getWordsVocabulary().size()));
+        this.store = Store.getInstance();
 
+        CountResult results = this.store.getCountResult();
+
+        Log.d(LOG_TAG, String.valueOf(results.getWordsVocabulary().size()));
+
+        //ToDo: remove when table view ready
+        String resultString = getResultString(results);
+        TextView resultsTextView = (TextView) findViewById(R.id.resultsText);
+        resultsTextView.setText(resultString);
+
+
+    }
+
+    private String getResultString(CountResult countResult){
+        String result = "";
+
+        for(int i = 0; i < countResult.getWordsVocabulary().size(); i++){
+            Word word = countResult.getWordsVocabulary().get(i);
+            result += word.getWord() + "    " + word.getAppearsCount() + "\n";
         }
+
+        for(int i = 0; i < countResult.getCharsVocabulary().size(); i++){
+            WordChar c = countResult.getCharsVocabulary().get(i);
+            result += c.getWordCharacter() + "  " + c.getAppearsCount() + "\n";
+        }
+
+        result += "Words: " + countResult.getWordsCount() + "\n";
+        result += "Chars: " + countResult.getCharsCount() + "\n";
+
+        return result;
     }
 
     @Override

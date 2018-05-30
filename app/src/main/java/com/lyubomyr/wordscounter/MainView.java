@@ -25,6 +25,8 @@ public class MainView extends AppCompatActivity {
 
     private String LOG_TAG = "MAIN_VIEW";
 
+    private Store store;
+
     protected String text;
     protected WordCounter wordCounter;
 
@@ -32,7 +34,6 @@ public class MainView extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
 
     private Intent showResults;
-    private PendingIntent pendingIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +46,9 @@ public class MainView extends AppCompatActivity {
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
+        this.store = Store.getInstance();
+
         this.showResults = new Intent(this, DisplayResultsView.class);
-        this.pendingIntent = TaskStackBuilder.create(this)
-                // add all of DetailsActivity's parents to the stack,
-                // followed by DetailsActivity itself
-                .addNextIntentWithParentStack(showResults).getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         //wordCounter = new WordCounter();
 
@@ -115,9 +114,7 @@ public class MainView extends AppCompatActivity {
 
         wordCounter.startCounting(text);
 
-        String result = wordCounter.getResult();
-        Log.d(LOG_TAG, result);
-        showResultsView(wordCounter.getCountResult(), wordCounter.getResult());
+        showResultsView(wordCounter.getCountResult());
 
 //        Snackbar.make(view, "Calculating words, please wait...", Snackbar.LENGTH_INDEFINITE)
 //                .setAction("", null).show();
@@ -134,13 +131,9 @@ public class MainView extends AppCompatActivity {
 //                }).show();
     }
 
-    protected void showResultsView(CountResult countResult, String result) {
-
-        this.showResults.putExtra(DisplayResultsView.KEY_STRING_RESULTS, result);
-        //this.showResults.putExtra("countResult", (Serializable) countResult);
-        this.showResults.putExtra(DisplayResultsView.KEY_RESULTS, "sss");
+    protected void showResultsView(CountResult countResult) {
+        store.setCountResult(countResult);
         startActivity(this.showResults);
-
     }
 
     @Override
