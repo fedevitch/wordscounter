@@ -16,6 +16,8 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract WordCharDAO wordCharDAO();
 
+    public abstract SettingsDAO settingsDAO();
+
     private static AppDatabase INSTANCE;
 
     public static AppDatabase getDatabase(final Context context) {

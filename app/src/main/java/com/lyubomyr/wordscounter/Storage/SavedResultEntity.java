@@ -17,6 +17,8 @@ public class SavedResultEntity {
 
     public int chars_count;
 
+    public String text;
+
     public Date created_at;
 
 }
