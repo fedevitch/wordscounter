@@ -75,6 +75,23 @@ public class MainView extends AppCompatActivity {
                         // Add code here to update the UI based on the item selected
                         // For example, swap UI fragments here
 
+                        switch(menuItem.getItemId()) {
+                            case R.id.nav_new:
+                                Log.d(LOG_TAG, "new");
+                                return true;
+                            case R.id.nav_history:
+                                Log.d(LOG_TAG, "history");
+                                return true;
+                            case R.id.nav_settings:
+                                Log.d(LOG_TAG, "settings");
+                                openSettings();
+                                return true;
+                            case R.id.nav_exit:
+                                Log.d(LOG_TAG, "exit");
+                                closeApplication();
+                                return true;
+                        }
+
                         return true;
                     }
                 });
@@ -84,25 +101,26 @@ public class MainView extends AppCompatActivity {
                     @Override
                     public void onDrawerSlide(View drawerView, float slideOffset) {
                         // Respond when the drawer's position changes
-                        Log.d(LOG_TAG, "slide");
+                        //Log.d(LOG_TAG, "slide");
                     }
 
                     @Override
                     public void onDrawerOpened(View drawerView) {
                         // Respond when the drawer is opened
-                        Log.d(LOG_TAG, "opened");
+                        //Log.d(LOG_TAG, "opened");
                     }
 
                     @Override
                     public void onDrawerClosed(View drawerView) {
                         // Respond when the drawer is closed
-                        Log.d(LOG_TAG, "closed");
+                        //Log.d(LOG_TAG, "closed");
                     }
 
                     @Override
                     public void onDrawerStateChanged(int newState) {
                         // Respond when the drawer motion state changes
-                        Log.d(LOG_TAG, "changed");
+                        //Log.d(LOG_TAG, "changed");
+                        //Log.d(LOG_TAG, String.valueOf(newState));
                     }
                 }
         );
@@ -154,5 +172,14 @@ public class MainView extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void openSettings(){
+        Intent settingsIntent = new Intent(this, SettingsView.class);
+        startActivity(settingsIntent);
+    }
+
+    public void closeApplication(){
+        finishAndRemoveTask();
     }
 }

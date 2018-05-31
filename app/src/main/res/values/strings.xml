@@ -6,4 +6,6 @@
     <string name="drawer_menu_new">New</string>
     <string name="drawer_menu_history">History</string>
     <string name="drawer_menu_exit">Exit</string>
+    <string name="view_title_results">Results</string>
+    <string name="view_title_settings">Settings</string>
 </resources>

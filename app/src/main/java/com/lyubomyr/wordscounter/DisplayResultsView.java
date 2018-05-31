@@ -34,9 +34,10 @@ public class DisplayResultsView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.results_view);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.results_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setTitle(R.string.view_title_results);
 
         Log.d(LOG_TAG, "started activity");
 

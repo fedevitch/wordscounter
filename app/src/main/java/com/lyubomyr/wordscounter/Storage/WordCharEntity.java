@@ -2,6 +2,7 @@ package com.lyubomyr.wordscounter.Storage;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 @Entity(tableName = "wordchars",
@@ -9,6 +10,9 @@ import android.support.annotation.NonNull;
             parentColumns = "id",
             childColumns = "result_id", onDelete = 1, onUpdate = 1))
 public class WordCharEntity {
+
+    @PrimaryKey
+    public int id;
 
     @NonNull
     public int result_id;

@@ -12,8 +12,8 @@ public interface SettingsDAO {
     @Query("SELECT * from settings")
     List<SettingsEntity> getAllSettings();
 
-    @Query("UPDATE settings SET setting_value = :setting_value WHERE setting_type = :setting_type")
-    void updateSetting(String setting_type, String setting_value);
+    @Query("UPDATE settings SET setting_value = :setting_value WHERE setting_name = :setting_name")
+    void updateSetting(String setting_name, String setting_value);
 
     @Insert
     void setDefaultSettings(List<SettingsEntity> settings);
