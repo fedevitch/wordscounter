@@ -10,6 +10,7 @@ import android.util.Log;
 import com.lyubomyr.wordscounter.Storage.SettingsEntity;
 import com.lyubomyr.wordscounter.Storage.SettingsViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SettingsView extends AppCompatActivity {
@@ -50,6 +51,12 @@ public class SettingsView extends AppCompatActivity {
                 settingsEntityList = settingsViewModel.getAllSettings();
                 Log.d(LOG_TAG, "Got settings");
                 Log.d(LOG_TAG, String.valueOf(settingsEntityList.size()));
+
+                if(settingsEntityList.size() == 0){
+                    settingsEntityList = getDefaultSettings();
+                    settingsViewModel.setDefaultSettings(settingsEntityList);
+                }
+
             }
         };
 
@@ -58,6 +65,42 @@ public class SettingsView extends AppCompatActivity {
 
         t.start();
 
+    }
+
+    private List<SettingsEntity> getDefaultSettings(){
+        List<SettingsEntity> settings = new ArrayList<SettingsEntity>();
+
+        SettingsEntity saveResults = new SettingsEntity();
+        saveResults.setting_name = "save_results";
+        saveResults.setting_type = "switch";
+        saveResults.setting_value = "true";
+        settings.add(saveResults);
+
+        SettingsEntity numOfRecords = new SettingsEntity();
+        numOfRecords.setting_name = "num_of_records";
+        numOfRecords.setting_type = "num_picker";
+        numOfRecords.setting_value = "5";
+        settings.add(numOfRecords);
+
+        SettingsEntity ignoredSymbols = new SettingsEntity();
+        ignoredSymbols.setting_name = "ignored_symbols";
+        ignoredSymbols.setting_type = "text_modal";
+        ignoredSymbols.setting_value = " .,;:!?+=*-~`  {(//<[]>)}\"\'|&\n\t  \\    ";
+        settings.add(ignoredSymbols);
+
+        SettingsEntity displayChart = new SettingsEntity();
+        displayChart.setting_name = "display_chart";
+        displayChart.setting_type = "checkbox";
+        displayChart.setting_value = "true";
+        settings.add(displayChart);
+
+        SettingsEntity displayTable = new SettingsEntity();
+        displayTable.setting_name = "display_table";
+        displayTable.setting_type = "checkbox";
+        displayTable.setting_value = "true";
+        settings.add(displayTable);
+
+        return settings;
     }
 
 }
