@@ -18,6 +18,7 @@ public class SettingsView extends AppCompatActivity {
     private String LOG_TAG = "SETTINGS_VIEW";
 
 
+    private SettingsViewModel settingsViewModel;
     private Store store;
 
     private List<SettingsEntity> settingsEntityList;
@@ -45,13 +46,23 @@ public class SettingsView extends AppCompatActivity {
 
     private void initializeSettings(){
 
-        SettingsViewModel settingsViewModel = ViewModelProviders.of(SettingsView.this).get(SettingsViewModel.class);
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                settingsViewModel = ViewModelProviders.of(SettingsView.this).get(SettingsViewModel.class);
 
-        Settings settings = new Settings(settingsViewModel);
+                Settings settings = new Settings(settingsViewModel);
 
-        store.setSettings(settings);
+                store.setSettings(settings);
 
-        Log.d(LOG_TAG, "Settings set");
+                Log.d(LOG_TAG, "Settings set");
+
+            }
+        };
+
+        Thread t = new Thread(r);
+        t.start();
+
 
     }
 

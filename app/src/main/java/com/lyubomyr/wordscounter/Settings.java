@@ -100,13 +100,15 @@ public class Settings {
                 } else if (setting.setting_name.equals(Names.save_results.toString())) {
                     this.saveResults = setting.setting_value.equals("true");
                 } else if (setting.setting_name.equals(Names.num_of_records.toString())) {
-                    this.numOfRecords = Integer.getInteger(setting.setting_value);
+                    this.numOfRecords = Integer.valueOf(setting.setting_value);
                 } else if (setting.setting_name.equals(Names.ignored_symbols.toString())) {
                     this.ignoredSymbols = setting.setting_value;
                 }
             } catch (Exception e){
                 Log.e(LOG_TAG, "mapFromDbEntity error");
                 Log.e(LOG_TAG, setting.setting_name);
+                Log.e(LOG_TAG, setting.setting_value);
+
                 e.printStackTrace();
             }
         }
