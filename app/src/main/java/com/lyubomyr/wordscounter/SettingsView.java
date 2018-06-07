@@ -6,6 +6,9 @@ import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.lyubomyr.wordscounter.Storage.SettingsEntity;
 import com.lyubomyr.wordscounter.Storage.SettingsViewModel;
@@ -23,6 +26,8 @@ public class SettingsView extends AppCompatActivity {
 
     private List<SettingsEntity> settingsEntityList;
 
+    private ListView settingsListView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -34,6 +39,7 @@ public class SettingsView extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //toolbar.setTitle(R.string.view_title_settings);
         toolbar.setSubtitle(R.string.view_title_settings);
+        settingsListView = findViewById(R.id.settings_list);
 
         Log.d(LOG_TAG, "settings started");
 
@@ -57,13 +63,28 @@ public class SettingsView extends AppCompatActivity {
 
                 Log.d(LOG_TAG, "Settings set");
 
+                //displayList(settings.settingsDb);
+
             }
         };
+
 
         Thread t = new Thread(r);
         t.start();
 
 
+    }
+
+    private void displayList(List<SettingsEntity> settings){
+        SettingsViewCellAdapter cellAdapter = new SettingsViewCellAdapter(this, settings);
+        settingsListView.setAdapter(cellAdapter);
+        settingsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(LOG_TAG, "Item clicked");
+                Log.d(LOG_TAG, String.valueOf(position));
+            }
+        });
     }
 
 }

@@ -19,7 +19,7 @@ public class Settings {
 
     private String ignoredSymbols;
 
-    private List<SettingsEntity> settingsDb;
+    public List<SettingsEntity> settingsDb;
     private final SettingsViewModel settingsViewModel;
     private String LOG_TAG = "SETTINGS_HANDLER";
 
