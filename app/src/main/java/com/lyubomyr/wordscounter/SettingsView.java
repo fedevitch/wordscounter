@@ -34,7 +34,7 @@ public class SettingsView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_view);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.settings_toolbar);
+        Toolbar toolbar = findViewById(R.id.settings_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //toolbar.setTitle(R.string.view_title_settings);

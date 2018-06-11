@@ -8,4 +8,14 @@
     <string name="drawer_menu_exit">Exit</string>
     <string name="view_title_results">Results</string>
     <string name="view_title_settings">Settings</string>
+    <string name="settings_save_records_title">Enable counts history</string>
+    <string name="settings_save_records_hint">Save your word counts in app</string>
+    <string name="settings_num_of_records_title">Records history max</string>
+    <string name="settings_num_of_records_hint">Max number of counts which could be saved in app</string>
+    <string name="settings_ignored_symbols_title">Ignored symbols</string>
+    <string name="settings_ignored_symbols_hint">Characters from this list will be ignored during counting</string>
+    <string name="settings_display_table_title">Display results table</string>
+    <string name="settings_display_table_hint">Enable table results representation</string>
+    <string name="settings_display_chart_title">Display results chart</string>
+    <string name="settings_display_chart_hint">Enable chart for results</string>
 </resources>
