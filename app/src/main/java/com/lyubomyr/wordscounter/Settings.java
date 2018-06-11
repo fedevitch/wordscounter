@@ -75,6 +75,7 @@ public class Settings {
                 Log.d(LOG_TAG, String.valueOf(settingsDb.size()));
 
                 if(settingsDb.size() == 0){
+                    Log.d(LOG_TAG, "Setting default settings");
                     settingsDb = getDefaultSettings();
                     settingsViewModel.setDefaultSettings(settingsDb);
                 }
@@ -87,6 +88,14 @@ public class Settings {
         Thread t = new Thread(init);
 
         t.start();
+
+        try {
+            t.join();
+        } catch(Exception e){
+            Log.e(LOG_TAG, "Тред не дочекався");
+            Log.e(LOG_TAG, e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void mapFromDbEntity(@NonNull List<SettingsEntity> settingsDb){

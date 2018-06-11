@@ -63,7 +63,7 @@ public class SettingsView extends AppCompatActivity {
 
                 Log.d(LOG_TAG, "Settings set");
 
-                //displayList(settings.settingsDb);
+                //
 
             }
         };
@@ -71,11 +71,20 @@ public class SettingsView extends AppCompatActivity {
 
         Thread t = new Thread(r);
         t.start();
+        try {
+            t.join();
+        } catch(Exception e){
+            Log.e(LOG_TAG, "Тред не дочекався");
+            Log.e(LOG_TAG, e.getMessage());
+            e.printStackTrace();
+        }
+        displayList(store.getSettings().settingsDb);
 
 
     }
 
     private void displayList(List<SettingsEntity> settings){
+        Log.d(LOG_TAG, "displaying list");
         SettingsViewCellAdapter cellAdapter = new SettingsViewCellAdapter(this, settings);
         settingsListView.setAdapter(cellAdapter);
         settingsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
