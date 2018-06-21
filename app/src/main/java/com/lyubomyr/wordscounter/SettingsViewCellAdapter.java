@@ -1,7 +1,6 @@
 package com.lyubomyr.wordscounter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +22,7 @@ public class SettingsViewCellAdapter extends ArrayAdapter<String> {
     private String subTitle;
 
     public SettingsViewCellAdapter(Context context, List<SettingsEntity> settings){
-        super(context, R.layout.settings_list_item);
+        super(context, R.layout.settings_list_item_simple);
         this.context = context;
         this.settings = settings;
         Log.d(LOG_TAG, "Adapter Started");
@@ -48,18 +47,27 @@ public class SettingsViewCellAdapter extends ArrayAdapter<String> {
     public View getView(int position, View convertView, ViewGroup parent){
         Log.d(LOG_TAG, "called getView()");
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.settings_list_item, parent, false);
 
-        TextView title = view.findViewById(R.id.setting_item_title);
-        TextView subTitle = view.findViewById(R.id.setting_item_subtitle);
 
         SettingsEntity setting = settings.get(position);
-        title.setText(this.getTitle(setting));
-        subTitle.setText(this.getSubtitle(setting));
 
-        Log.d(LOG_TAG, String.valueOf(view.toString()));
 
-        return view;
+        Log.d(LOG_TAG, setting.setting_type);
+
+
+
+        if(setting.setting_type.equals(Settings.Types._switch.toString())){
+            return renderSwitch(inflater, parent, setting);
+        } else if(setting.setting_type.equals(Settings.Types.checkbox.toString())){
+            return renderCheckbox(inflater, parent, setting);
+        } else if(setting.setting_type.equals(Settings.Types.num_picker.toString())){
+            return renderModal(inflater, parent, setting);
+        } else if(setting.setting_type.equals((Settings.Types.text_modal.toString()))){
+            return renderModal(inflater, parent, setting);
+        }
+
+        return renderSimpleListItem(inflater, parent, setting);
+
     }
 
     private String getTitle(SettingsEntity setting){
@@ -92,6 +100,61 @@ public class SettingsViewCellAdapter extends ArrayAdapter<String> {
         } else {
             return "";
         }
+    }
+
+    private View renderSimpleListItem(LayoutInflater inflater, ViewGroup parent, SettingsEntity setting){
+        View view = inflater.inflate(R.layout.settings_list_item_simple, parent, false);
+
+        TextView title = view.findViewById(R.id.setting_list_item_simple_title);
+        TextView subTitle = view.findViewById(R.id.setting_list_item_simple_subtitle);
+
+        title.setText(this.getTitle(setting));
+        subTitle.setText(this.getSubtitle(setting));
+
+        return view;
+    }
+
+    private View renderCheckbox(LayoutInflater inflater, ViewGroup parent, SettingsEntity setting){
+        View view = inflater.inflate(R.layout.settings_list_item_checkbox, parent, false);
+
+        TextView title = view.findViewById(R.id.setting_list_item_checkbox_title);
+        TextView subTitle = view.findViewById(R.id.setting_list_item_checkbox_subtitle);
+
+        title.setText(this.getTitle(setting));
+        subTitle.setText(this.getSubtitle(setting));
+
+        return view;
+    }
+
+    private View renderSwitch(LayoutInflater inflater, ViewGroup parent, SettingsEntity setting){
+        View view = inflater.inflate(R.layout.settings_list_item_switch, parent, false);
+
+        TextView title = view.findViewById(R.id.setting_list_item_switch_title);
+        TextView subTitle = view.findViewById(R.id.setting_list_item_switch_subtitle);
+
+        title.setText(this.getTitle(setting));
+        subTitle.setText(this.getSubtitle(setting));
+
+        return view;
+    }
+
+    private View renderModal(LayoutInflater inflater, ViewGroup parent, SettingsEntity setting){
+        View view = inflater.inflate(R.layout.settings_list_item_simple, parent, false);
+
+        TextView title = view.findViewById(R.id.setting_list_item_simple_title);
+        TextView subTitle = view.findViewById(R.id.setting_list_item_simple_subtitle);
+
+        title.setText(this.getTitle(setting));
+        subTitle.setText(this.getSubtitle(setting));
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG_TAG, "opening modal here");
+            }
+        });
+
+        return view;
     }
 
 }

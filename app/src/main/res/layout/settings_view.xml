@@ -21,6 +21,6 @@
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/settings_toolbar"
-        tools:listitem="@layout/settings_list_item"/>
+        />
 
 </RelativeLayout>
