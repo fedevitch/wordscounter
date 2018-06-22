@@ -48,7 +48,7 @@ public class Settings {
 
     }
 
-    private void saveSetting(final SettingsEntity setting){
+    public void saveSetting(final SettingsEntity setting){
         Runnable save = new Runnable() {
             @Override
             public void run() {
@@ -59,6 +59,15 @@ public class Settings {
         Thread t = new Thread(save);
 
         t.start();
+
+        try {
+            t.join();
+            this.getSettingsFromDb();
+        } catch(Exception e){
+            Log.e(LOG_TAG, "Тред не дочекався");
+            Log.e(LOG_TAG, e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 
@@ -66,6 +75,10 @@ public class Settings {
     public Settings(final SettingsViewModel settingsViewModel){
         this.settingsViewModel = settingsViewModel;
 
+        this.getSettingsFromDb();
+    }
+
+    private void getSettingsFromDb(){
         Runnable init = new Runnable() {
             @Override
             public void run() {

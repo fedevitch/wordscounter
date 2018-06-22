@@ -18,4 +18,6 @@
     <string name="settings_display_table_hint">Enable table results representation</string>
     <string name="settings_display_chart_title">Display results chart</string>
     <string name="settings_display_chart_hint">Enable chart for results</string>
+    <string name="num_picker_ok">OK</string>
+    <string name="num_picker_cancel">Cancel</string>
 </resources>

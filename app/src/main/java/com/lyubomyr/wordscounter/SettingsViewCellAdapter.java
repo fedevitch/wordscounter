@@ -1,11 +1,18 @@
 package com.lyubomyr.wordscounter;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.NumberPicker;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.lyubomyr.wordscounter.Storage.SettingsEntity;
@@ -18,8 +25,6 @@ public class SettingsViewCellAdapter extends ArrayAdapter<String> {
     private Context context;
     private String LOG_TAG = "SETTING_ITEM_ADAPTER";
 
-    private String title;
-    private String subTitle;
 
     public SettingsViewCellAdapter(Context context, List<SettingsEntity> settings){
         super(context, R.layout.settings_list_item_simple);
@@ -31,30 +36,18 @@ public class SettingsViewCellAdapter extends ArrayAdapter<String> {
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
         return this.settings.size();
     }
 
     @Override
     public long getItemId(int arg0) {
-        // TODO Auto-generated method stub
-        Log.d(LOG_TAG, "getId");
-        Log.d(LOG_TAG, String.valueOf(arg0));
         return arg0;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
-        Log.d(LOG_TAG, "called getView()");
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-
         SettingsEntity setting = settings.get(position);
-
-
-        Log.d(LOG_TAG, setting.setting_type);
-
-
 
         if(setting.setting_type.equals(Settings.Types._switch.toString())){
             return renderSwitch(inflater, parent, setting);
@@ -105,6 +98,7 @@ public class SettingsViewCellAdapter extends ArrayAdapter<String> {
     private View renderSimpleListItem(LayoutInflater inflater, ViewGroup parent, SettingsEntity setting){
         View view = inflater.inflate(R.layout.settings_list_item_simple, parent, false);
 
+
         TextView title = view.findViewById(R.id.setting_list_item_simple_title);
         TextView subTitle = view.findViewById(R.id.setting_list_item_simple_subtitle);
 
@@ -114,31 +108,51 @@ public class SettingsViewCellAdapter extends ArrayAdapter<String> {
         return view;
     }
 
-    private View renderCheckbox(LayoutInflater inflater, ViewGroup parent, SettingsEntity setting){
+    private View renderCheckbox(LayoutInflater inflater, ViewGroup parent, final SettingsEntity setting){
         View view = inflater.inflate(R.layout.settings_list_item_checkbox, parent, false);
 
         TextView title = view.findViewById(R.id.setting_list_item_checkbox_title);
         TextView subTitle = view.findViewById(R.id.setting_list_item_checkbox_subtitle);
+        final CheckBox checkBox = view.findViewById(R.id.list_item_checkBox);
 
         title.setText(this.getTitle(setting));
         subTitle.setText(this.getSubtitle(setting));
+        checkBox.setChecked(setting.setting_value.equals("true"));
+
+        checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setting.setting_value = String.valueOf(checkBox.isChecked());
+                onChangeSetting(setting);
+            }
+        });
 
         return view;
     }
 
-    private View renderSwitch(LayoutInflater inflater, ViewGroup parent, SettingsEntity setting){
+    private View renderSwitch(LayoutInflater inflater, ViewGroup parent, final SettingsEntity setting){
         View view = inflater.inflate(R.layout.settings_list_item_switch, parent, false);
 
         TextView title = view.findViewById(R.id.setting_list_item_switch_title);
         TextView subTitle = view.findViewById(R.id.setting_list_item_switch_subtitle);
+        final Switch _switch = view.findViewById(R.id.list_item_switch);
 
         title.setText(this.getTitle(setting));
         subTitle.setText(this.getSubtitle(setting));
+        _switch.setChecked(setting.setting_value.equals("true"));
+
+        _switch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setting.setting_value = String.valueOf(_switch.isChecked());
+                onChangeSetting(setting);
+            }
+        });
 
         return view;
     }
 
-    private View renderModal(LayoutInflater inflater, ViewGroup parent, SettingsEntity setting){
+    private View renderModal(LayoutInflater inflater, ViewGroup parent, final SettingsEntity setting){
         View view = inflater.inflate(R.layout.settings_list_item_simple, parent, false);
 
         TextView title = view.findViewById(R.id.setting_list_item_simple_title);
@@ -147,14 +161,96 @@ public class SettingsViewCellAdapter extends ArrayAdapter<String> {
         title.setText(this.getTitle(setting));
         subTitle.setText(this.getSubtitle(setting));
 
+        if(setting.setting_type.equals(Settings.Types.num_picker.toString())){
+            return renderNumPickerModal(view, setting);
+        } else if(setting.setting_type.equals(Settings.Types.text_modal.toString())){
+            return renderTextModal(view, setting);
+        }
+
+        return view;
+    }
+
+    private View renderNumPickerModal(View view, final SettingsEntity setting){
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(LOG_TAG, "opening modal here");
+
+                final Dialog d = new Dialog(getContext());
+                d.setContentView(R.layout.settings_number_dialog);
+
+                Button OK = d.findViewById(R.id.dialogNumPicker_ok);
+                Button Cancel = d.findViewById(R.id.dialogNumPicker_cancel);
+                final NumberPicker num_picker = d.findViewById(R.id.dialogNumPicker);
+                num_picker.setMinValue(0);
+                num_picker.setMaxValue(1000);
+                num_picker.setValue(Integer.valueOf(setting.setting_value));
+                num_picker.setWrapSelectorWheel(true);
+                OK.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        setting.setting_value = String.valueOf(num_picker.getValue());
+                        onChangeSetting(setting);
+                        d.dismiss();
+                    }
+                });
+                Cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        d.dismiss();
+                    }
+                });
+
+                d.show();
+
             }
         });
 
         return view;
+    }
+
+    private View renderTextModal(View view, final SettingsEntity setting){
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG_TAG, "opening modal here");
+
+                final Dialog d = new Dialog(getContext());
+                d.setContentView(R.layout.settings_text_dialog);
+
+                final EditText editText = d.findViewById(R.id.dialogInputText);
+                editText.setText(setting.setting_value);
+
+                Button OK = d.findViewById(R.id.dialogInputText_ok);
+                Button Cancel = d.findViewById(R.id.dialogInputText_cancel);
+
+                OK.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        setting.setting_value = editText.getText().toString();
+                        onChangeSetting(setting);
+                        d.dismiss();
+                    }
+                });
+                Cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        d.dismiss();
+                    }
+                });
+
+                d.show();
+
+            }
+        });
+
+        return view;
+    }
+
+    private void onChangeSetting(SettingsEntity setting){
+        Log.d(LOG_TAG, "changed setting");
+        Store store = Store.getInstance();
+        store.getSettings().saveSetting(setting);
     }
 
 }
