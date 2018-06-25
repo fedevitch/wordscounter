@@ -5,13 +5,16 @@ import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import static android.arch.persistence.room.ForeignKey.CASCADE;
+
 @Entity(tableName = "wordchars",
         foreignKeys = @ForeignKey(entity = SavedResultEntity.class,
             parentColumns = "id",
-            childColumns = "result_id", onDelete = 1, onUpdate = 1))
+            childColumns = "result_id", onDelete = CASCADE, onUpdate = CASCADE))
 public class WordCharEntity {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
     public int id;
 
     @NonNull

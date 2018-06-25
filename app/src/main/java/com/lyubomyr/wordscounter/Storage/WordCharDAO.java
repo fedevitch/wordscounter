@@ -14,7 +14,7 @@ public interface WordCharDAO {
     List<WordCharEntity> getWords(int resultId);
 
     @Insert
-    void insert(WordCharEntity wordEntity);
+    void insertWordChars(List<WordCharEntity> wordEntity);
 
     @Query("DELETE from wordchars WHERE result_id = :resultId")
     void deleteWordChar(int resultId);

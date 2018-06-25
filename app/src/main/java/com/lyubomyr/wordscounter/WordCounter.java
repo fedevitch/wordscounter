@@ -34,6 +34,8 @@ public class WordCounter {
     private List<Character> charactersVocabulary;
     private List<Integer> characters_used;
 
+    private Settings appSettings;
+
 
 
 
@@ -57,6 +59,8 @@ public class WordCounter {
 
         this.words = new ArrayList<Word>();
         this.chars = new ArrayList<WordChar>();
+
+        this.appSettings = Store.getInstance().getSettings();
 
     }
 
@@ -202,7 +206,7 @@ public class WordCounter {
         String chars = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                 + "абвгґдеєжзиіїйклмнопрстуфхцчшщьюяАБВГҐДЕЄЖЗИІЇКЛМНОПРСТУФХЦЧШЩЬЮЯ"
                 + "1234567890~_Ⓡ    \n\t";
-        String charsToIgnore = " .,;:!?+=*-~`  {(//<[]>)}\"\'|&\n\t  \\    ";
+        String charsToIgnore = this.appSettings.getIgnoredSymbols(); //" .,;:!?+=*-~`  {(//<[]>)}\"\'|&\n\t  \\    ";
 
 
 

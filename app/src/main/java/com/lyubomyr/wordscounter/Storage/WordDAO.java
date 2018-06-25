@@ -14,9 +14,9 @@ public interface WordDAO {
     List<WordEntity> getWords(int resultId);
 
     @Insert
-    void insert(WordEntity wordEntity);
+    void insertWords(List<WordEntity> wordEntity);
 
     @Query("DELETE from words WHERE result_id = :resultId")
-    void deleteWord(int resultId);
+    void deleteWords(int resultId);
 
 }

@@ -8,12 +8,10 @@ import java.util.List;
 public class SettingsRepository {
 
     private SettingsDAO settingsDAO;
-    private List<SettingsEntity> settingsEntities;
 
     SettingsRepository(Application application){
         AppDatabase db = AppDatabase.getDatabase(application);
         settingsDAO = db.settingsDAO();
-        //settingsEntities = settingsDAO.getAllSettings();
     }
 
     public List<SettingsEntity> getAllSettings(){
