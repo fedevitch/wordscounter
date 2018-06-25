@@ -10,12 +10,15 @@ import java.util.List;
 public interface SavedResultDAO {
 
     @Insert
-    void insert(SavedResultEntity savedResultEntity);
+    void insertResult(SavedResultEntity savedResultEntity);
 
     @Query("DELETE from saved_results")
     void deleteAll();
 
+    @Query("DELETE from saved_results WHERE id = :resultId")
+    void deleteResult(int resultId);
+
     @Query("SELECT * from saved_results ORDER BY created_at DESC")
-    List<SavedResultEntity> getAllResultsInfo();
+    List<SavedResultEntity> getAllSavedResults();
 
 }

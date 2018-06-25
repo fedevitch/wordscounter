@@ -36,11 +36,13 @@ public class WordCounter {
 
     private Settings appSettings;
 
+    private String LOG_TAG = "Word_counter";
+
 
 
 
     WordCounter(){
-        Log.d("DEBUG","called constructor");
+        Log.d(LOG_TAG,"called constructor");
 
         this.resultsReady = false;
         this.charset = "UTF-8";
@@ -131,7 +133,7 @@ public class WordCounter {
         {
             this.compareChar(s.charAt(i));
         }
-        Log.d("DEBUG","chars processed");
+        Log.d(LOG_TAG,"chars processed");
 
         if(this.countResult.isPresent(s)){
             this.countResult.incrementWordAppearsCount(s);
@@ -179,10 +181,10 @@ public class WordCounter {
     {
         if (text.isEmpty()) return;
 
-        Log.d("DEBUG", "find() called ");
+        Log.d(LOG_TAG, "find() called ");
 
-        //Log.d("DEBUG", "trying: " + text);
-        Log.d("DEBUG", "ignored chars: " + ignored_chars);
+        //Log.d(LOG_TAG, "trying: " + text);
+        Log.d(LOG_TAG, "ignored chars: " + ignored_chars);
         StringTokenizer str = new StringTokenizer(text);//пошук
 
         while(str.hasMoreTokens()){
@@ -211,23 +213,32 @@ public class WordCounter {
 
 
         if (text.isEmpty()) {
-            System.out.println("empty field found");
+            Log.d(LOG_TAG,"empty field found");
             return;
         }
 
         this.find(text,charsToIgnore);
+
+        if(appSettings.getSaveResults()) {
+
+            Log.d(LOG_TAG, "Saving results");
+            // get records count here, sorted by created_at
+            // if count < allowed - save result
+            // else - remove oldest result and then save current
+
+        }
 
     }
 
     //legacy
     public String getResult(){
         String info = "Слова: \n";
-        System.out.println("Preparing result. Unique words found: " + this.wordsVocabulary.size());
+        Log.d(LOG_TAG, "Preparing result. Unique words found: " + this.wordsVocabulary.size());
         for (int i = 0; i < this.wordsVocabulary.size(); i++){
             info += " " + this.wordsVocabulary.get(i) + "  " + this.word_used.get(i) + " \n";
             double percent = (i+1)/(this.wordsVocabulary.size()/100.0);
             String statusBar = Double.toString(percent);
-            System.out.println(statusBar+"% of results ready");
+            Log.d(LOG_TAG,statusBar+"% of results ready");
         }
 
         info += "Літери: \n";
