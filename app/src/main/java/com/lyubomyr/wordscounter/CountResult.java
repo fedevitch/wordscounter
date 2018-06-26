@@ -2,11 +2,21 @@ package com.lyubomyr.wordscounter;
 
 import android.util.Log;
 
+import com.lyubomyr.wordscounter.Storage.SavedResultEntity;
+import com.lyubomyr.wordscounter.Storage.SavedResultJoined;
+import com.lyubomyr.wordscounter.Storage.WordCharEntity;
+import com.lyubomyr.wordscounter.Storage.WordEntity;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.UUID;
 
 public class CountResult {
+
+    public String text;
+    public Date created_at;
 
     private List<Word> wordsVocabulary;
     private List<WordChar> charsVocabulary;
@@ -22,7 +32,7 @@ public class CountResult {
         this.charsCount = 0;
     }
 
-    CountResult(List<Word> words, List<WordChar> chars){
+    CountResult(List<Word> words, List<WordChar> chars, String text, Date created_at){
         this.wordsVocabulary = words;
         this.charsVocabulary = chars;
         for(int i = 0; i < this.wordsVocabulary.size(); i++){
@@ -31,6 +41,30 @@ public class CountResult {
         for(int i = 0; i < this.charsVocabulary.size(); i++){
             this.charsCount += this.charsVocabulary.get(i).getAppearsCount();
         }
+
+        this.text = text;
+        this.created_at = created_at;
+    }
+
+    CountResult(SavedResultJoined dbEntity){
+        this.wordsVocabulary = new ArrayList<Word>();
+        this.charsVocabulary = new ArrayList<WordChar>();
+        this.wordsCount = dbEntity.words_count;
+        this.charsCount = dbEntity.chars_count;
+        this.text = dbEntity.text;
+        this.created_at = dbEntity.created_at;
+
+        ListIterator<WordEntity> it_w = dbEntity.words.listIterator();
+        while (it_w.hasNext()){
+            this.wordsVocabulary.add(new Word(it_w.next()));
+        }
+
+        ListIterator<WordCharEntity> it_c = dbEntity.characters.listIterator();
+        while (it_c.hasNext()){
+            this.charsVocabulary.add(new WordChar(it_c.next()));
+        }
+
+
     }
 
     public List<Word> getWordsVocabulary() {
@@ -187,6 +221,34 @@ public class CountResult {
                 return;
             }
         }
+    }
+
+    public SavedResultJoined getDbEntity(){
+        SavedResultJoined dbEntity = new SavedResultJoined();
+
+        dbEntity.id = UUID.randomUUID().toString();
+        Log.d(LOG_TAG, "dbEntity id " + String.valueOf(dbEntity.id));
+
+        dbEntity.chars_count = this.charsCount;
+        dbEntity.words_count = this.wordsCount;
+        dbEntity.text = this.text;
+        dbEntity.created_at = new Date();
+
+        dbEntity.words = new ArrayList<>();
+        ListIterator<Word> it_w = this.wordsVocabulary.listIterator();
+        while (it_w.hasNext()){
+            Word w = it_w.next();
+            dbEntity.words.add(w.getDbEntity(dbEntity.id));
+        }
+
+        dbEntity.characters = new ArrayList<>();
+        ListIterator<WordChar> it_c = this.charsVocabulary.listIterator();
+        while (it_c.hasNext()){
+            WordChar c = it_c.next();
+            dbEntity.characters.add(c.getDbEntity(dbEntity.id));
+        }
+
+        return dbEntity;
     }
 
 }

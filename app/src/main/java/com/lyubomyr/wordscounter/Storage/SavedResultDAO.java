@@ -16,9 +16,9 @@ public interface SavedResultDAO {
     void deleteAll();
 
     @Query("DELETE from saved_results WHERE id = :resultId")
-    void deleteResult(int resultId);
+    void deleteResult(String resultId);
 
     @Query("SELECT * from saved_results ORDER BY created_at DESC")
-    List<SavedResultEntity> getAllSavedResults();
+    List<SavedResultJoined> getAllSavedResults();
 
 }

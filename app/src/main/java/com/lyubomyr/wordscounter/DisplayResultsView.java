@@ -1,5 +1,7 @@
 package com.lyubomyr.wordscounter;
 
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -12,7 +14,13 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lyubomyr.wordscounter.Storage.SavedResultEntity;
+import com.lyubomyr.wordscounter.Storage.SavedResultJoined;
+import com.lyubomyr.wordscounter.Storage.SavedResultsViewModel;
+import com.lyubomyr.wordscounter.Storage.SettingsViewModel;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lyubomyr on 18.05.18.
@@ -25,7 +33,7 @@ public class DisplayResultsView extends AppCompatActivity {
 
     private String LOG_TAG = "RESULTS_VIEW";
 
-    private Store store;
+    private final Store store = Store.getInstance();
 
     protected String results;
 
@@ -59,8 +67,6 @@ public class DisplayResultsView extends AppCompatActivity {
 
         Log.d(LOG_TAG, "trying to get data from store");
 
-        this.store = Store.getInstance();
-
         CountResult results = this.store.getCountResult();
 
         Log.d(LOG_TAG, String.valueOf(results.getWordsVocabulary().size()));
@@ -69,6 +75,8 @@ public class DisplayResultsView extends AppCompatActivity {
         String resultString = getResultString(results);
         TextView resultsTextView = (TextView) findViewById(R.id.resultsText);
         resultsTextView.setText(resultString);
+
+        handleSaveResult(results);
 
 
     }
@@ -125,6 +133,53 @@ public class DisplayResultsView extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void handleSaveResult(final CountResult result){
+
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    if (store.getSettings().getSaveResults() == null) {
+                        SettingsViewModel settingsViewModel = ViewModelProviders.of(DisplayResultsView.this).get(SettingsViewModel.class);
+
+                        Settings settings = new Settings(settingsViewModel);
+
+                        store.setSettings(settings);
+
+                        Log.d(LOG_TAG, "Settings set");
+                    }
+                    if (store.getSettings().getSaveResults()) {
+                        SavedResultsViewModel savedResultsViewModel = ViewModelProviders.of(DisplayResultsView.this).get(SavedResultsViewModel.class);
+                        List<SavedResultJoined> savedResults = savedResultsViewModel.getCountResults();
+
+                        if (savedResults.size() >= store.getSettings().getNumOfRecords()) {
+                            savedResultsViewModel.deleteSavedResult(savedResults.get(savedResults.size() - 1).id);
+                        }
+
+                        savedResultsViewModel.saveCountResult(result.getDbEntity());
+                    }
+                } catch(Exception e){
+                    e.printStackTrace();
+                    Log.d(LOG_TAG, "Сталасі хюйня");
+                }
+
+
+            }
+        };
+
+        Thread t = new Thread(r);
+        t.start();
+        try {
+            t.join();
+        } catch(Exception e){
+            Log.e(LOG_TAG, "Тред не дочекався");
+            Log.e(LOG_TAG, e.getMessage());
+            e.printStackTrace();
+        }
+
     }
 
 }

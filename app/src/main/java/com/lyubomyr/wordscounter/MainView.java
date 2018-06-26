@@ -1,6 +1,7 @@
 package com.lyubomyr.wordscounter;
 
 import android.app.PendingIntent;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +19,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+
+import com.lyubomyr.wordscounter.Storage.SettingsViewModel;
 
 import java.io.Serializable;
 
@@ -124,6 +127,8 @@ public class MainView extends AppCompatActivity {
                     }
                 }
         );
+
+        initializeSettings();
     }
 
     protected void startCount(View view) {
@@ -172,6 +177,38 @@ public class MainView extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void initializeSettings(){
+
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                SettingsViewModel settingsViewModel = ViewModelProviders.of(MainView.this).get(SettingsViewModel.class);
+
+                Settings settings = new Settings(settingsViewModel);
+
+                store.setSettings(settings);
+
+                Log.d(LOG_TAG, "Settings set");
+
+                //
+
+            }
+        };
+
+
+        Thread t = new Thread(r);
+        t.start();
+        try {
+            t.join();
+        } catch(Exception e){
+            Log.e(LOG_TAG, "Тред не дочекався");
+            Log.e(LOG_TAG, e.getMessage());
+            e.printStackTrace();
+        }
+
+
     }
 
     public void openSettings(){

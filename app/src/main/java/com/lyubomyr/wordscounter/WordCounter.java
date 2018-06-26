@@ -217,16 +217,10 @@ public class WordCounter {
             return;
         }
 
+        this.countResult.text = text;
+
         this.find(text,charsToIgnore);
 
-        if(appSettings.getSaveResults()) {
-
-            Log.d(LOG_TAG, "Saving results");
-            // get records count here, sorted by created_at
-            // if count < allowed - save result
-            // else - remove oldest result and then save current
-
-        }
 
     }
 

@@ -18,7 +18,7 @@ public class WordEntity {
     public int id;
 
     @NonNull
-    public int result_id;
+    public String result_id;
 
     @NonNull
     public String word;

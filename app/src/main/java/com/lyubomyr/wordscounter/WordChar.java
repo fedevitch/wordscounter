@@ -1,5 +1,7 @@
 package com.lyubomyr.wordscounter;
 
+import com.lyubomyr.wordscounter.Storage.WordCharEntity;
+
 public class WordChar {
     private Character wordCharacter;
     private int appearsCount;
@@ -7,6 +9,11 @@ public class WordChar {
     WordChar(char c){
         this.wordCharacter = c;
         this.appearsCount = 1;
+    }
+
+    WordChar(WordCharEntity wordCharEntity){
+        this.wordCharacter = wordCharEntity.character;
+        this.appearsCount = wordCharEntity.appears;
     }
 
     public void incrementAppearsCount(){
@@ -19,5 +26,15 @@ public class WordChar {
 
     public int getAppearsCount() {
         return appearsCount;
+    }
+
+    public WordCharEntity getDbEntity(String resultId){
+        WordCharEntity dbEntity = new WordCharEntity();
+
+        dbEntity.result_id = resultId;
+        dbEntity.character = this.wordCharacter;
+        dbEntity.appears = this.appearsCount;
+
+        return dbEntity;
     }
 }
