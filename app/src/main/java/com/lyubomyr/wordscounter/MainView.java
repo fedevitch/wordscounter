@@ -84,6 +84,7 @@ public class MainView extends AppCompatActivity {
                                 return true;
                             case R.id.nav_history:
                                 Log.d(LOG_TAG, "history");
+                                openSavedCounts();
                                 return true;
                             case R.id.nav_settings:
                                 Log.d(LOG_TAG, "settings");
@@ -214,6 +215,11 @@ public class MainView extends AppCompatActivity {
     public void openSettings(){
         Intent settingsIntent = new Intent(this, SettingsView.class);
         startActivity(settingsIntent);
+    }
+
+    public void openSavedCounts(){
+        Intent historyIntent = new Intent(this, SavedCountsView.class);
+        startActivity(historyIntent);
     }
 
     public void closeApplication(){

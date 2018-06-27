@@ -18,6 +18,8 @@ public class CountResult {
     public String text;
     public Date created_at;
 
+    private String resultId;
+
     private List<Word> wordsVocabulary;
     private List<WordChar> charsVocabulary;
     private int wordsCount;
@@ -30,20 +32,8 @@ public class CountResult {
         this.charsVocabulary = new ArrayList<WordChar>();
         this.wordsCount = 0;
         this.charsCount = 0;
-    }
 
-    CountResult(List<Word> words, List<WordChar> chars, String text, Date created_at){
-        this.wordsVocabulary = words;
-        this.charsVocabulary = chars;
-        for(int i = 0; i < this.wordsVocabulary.size(); i++){
-            this.wordsCount += this.wordsVocabulary.get(i).getAppearsCount();
-        }
-        for(int i = 0; i < this.charsVocabulary.size(); i++){
-            this.charsCount += this.charsVocabulary.get(i).getAppearsCount();
-        }
-
-        this.text = text;
-        this.created_at = created_at;
+        this.resultId = UUID.randomUUID().toString();
     }
 
     CountResult(SavedResultJoined dbEntity){
@@ -53,6 +43,7 @@ public class CountResult {
         this.charsCount = dbEntity.chars_count;
         this.text = dbEntity.text;
         this.created_at = dbEntity.created_at;
+        this.resultId = dbEntity.id;
 
         ListIterator<WordEntity> it_w = dbEntity.words.listIterator();
         while (it_w.hasNext()){
@@ -226,7 +217,7 @@ public class CountResult {
     public SavedResultJoined getDbEntity(){
         SavedResultJoined dbEntity = new SavedResultJoined();
 
-        dbEntity.id = UUID.randomUUID().toString();
+        dbEntity.id = this.resultId;
         Log.d(LOG_TAG, "dbEntity id " + String.valueOf(dbEntity.id));
 
         dbEntity.chars_count = this.charsCount;
@@ -251,4 +242,7 @@ public class CountResult {
         return dbEntity;
     }
 
+    public String getResultId() {
+        return resultId;
+    }
 }

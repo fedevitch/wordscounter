@@ -19,7 +19,7 @@ import com.lyubomyr.wordscounter.Storage.SettingsEntity;
 
 import java.util.List;
 
-public class SettingsViewCellAdapter extends ArrayAdapter<String> {
+public class SettingsViewCellAdapter extends ArrayAdapter {
 
     private List<SettingsEntity> settings;
     private Context context;

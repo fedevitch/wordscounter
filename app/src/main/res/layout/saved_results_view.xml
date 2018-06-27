@@ -9,18 +9,18 @@
     tools:context="com.lyubomyr.wordscounter.MainView">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/settings_toolbar"
+        android:id="@+id/saved_results_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
 
     <ListView
-        android:id="@+id/settings_list"
+        android:id="@+id/saved_results_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/settings_toolbar"
+        android:layout_below="@+id/saved_results_toolbar"
         />
 
 </RelativeLayout>
