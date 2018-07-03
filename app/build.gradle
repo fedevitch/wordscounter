@@ -37,4 +37,7 @@ dependencies {
 
     //MPAndroid chart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+
+    //flex
+    implementation 'com.google.android:flexbox:1.0.0'
 }

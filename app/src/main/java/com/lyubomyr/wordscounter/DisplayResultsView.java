@@ -3,6 +3,7 @@ package com.lyubomyr.wordscounter;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
@@ -14,6 +15,20 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.lyubomyr.wordscounter.Storage.SavedResultEntity;
 import com.lyubomyr.wordscounter.Storage.SavedResultJoined;
 import com.lyubomyr.wordscounter.Storage.SavedResultsViewModel;
@@ -21,6 +36,8 @@ import com.lyubomyr.wordscounter.Storage.SettingsViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by lyubomyr on 18.05.18.
@@ -53,14 +70,70 @@ public class DisplayResultsView extends AppCompatActivity {
 
         Log.d(LOG_TAG, String.valueOf(results.getWordsVocabulary().size()));
 
+        buildCharactersChart();
+        buildWordsChart();
+
         //ToDo: remove when table view ready
         String resultString = getResultString(results);
-        TextView resultsTextView = (TextView) findViewById(R.id.resultsText);
+        TextView resultsTextView = findViewById(R.id.resultsText);
         resultsTextView.setText(resultString);
 
         handleSaveResult(results);
 
 
+    }
+
+    private void buildCharactersChart(){
+        CountResult result = this.store.getCountResult();
+        List<PieEntry> entries = new ArrayList<>();
+
+
+        for(WordChar character : result.getCharsVocabulary()){
+            PieEntry entry = new PieEntry((float) character.getAppearsCount(), character.getWordCharacter().toString());
+
+            entries.add(entry);
+        }
+
+        PieDataSet characterSet = new PieDataSet(entries, "Characters");
+        int[] colors = { Color.rgb(100,221,23), Color.rgb(128,0,128), Color.rgb(255,136,0),
+                Color.rgb(255,0,0), Color.rgb(255,127,80), Color.rgb(47,95,255)
+        };
+        characterSet.setColors(colors);
+        PieData characterData = new PieData(characterSet);
+        PieChart characterChart = findViewById(R.id.characters_chart);
+        characterChart.setUsePercentValues(false);
+        characterChart.setCenterText("Characters");
+        characterChart.setData(characterData);
+        characterChart.invalidate();
+    }
+
+    private void buildWordsChart(){
+        CountResult result = this.store.getCountResult();
+        List<BarEntry> entries = new ArrayList<>();
+
+        BarData wordData = new BarData();
+
+        int index = 0;
+        for(Word word: result.getWordsVocabulary()){
+            BarEntry entry = new BarEntry(index++, (float) word.getAppearsCount());
+            entries.add(entry);
+
+            BarDataSet wordSet = new BarDataSet(entries, word.getWord());
+
+            wordData.addDataSet(wordSet);
+        }
+
+        HorizontalBarChart wordsChart = findViewById(R.id.words_chart);
+
+        XAxis xAxis = wordsChart.getXAxis();
+        xAxis.setGranularity(10f);
+
+        wordsChart.getLayoutParams().height = result.getWordsVocabulary().size() * 50;
+        wordsChart.setDrawValueAboveBar(true);
+
+
+        wordsChart.setData(wordData);
+        wordsChart.invalidate();
     }
 
     private String getResultString(CountResult countResult){
