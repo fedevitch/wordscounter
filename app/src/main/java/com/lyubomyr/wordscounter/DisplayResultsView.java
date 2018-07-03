@@ -28,8 +28,7 @@ import java.util.List;
 
 public class DisplayResultsView extends AppCompatActivity {
 
-    public static final String KEY_RESULTS = "RESULTS";
-    public static final String KEY_STRING_RESULTS = "STRING_RESULTS";
+    public static final String VIEWING_SAVED_RESULT = "ViewingSavedResult";
 
     private String LOG_TAG = "RESULTS_VIEW";
 
@@ -47,23 +46,6 @@ public class DisplayResultsView extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setTitle(R.string.view_title_results);
 
-        Log.d(LOG_TAG, "started activity");
-
-        //legacy
-        /*
-        Intent intent = getIntent();
-
-        if (intent.hasExtra(KEY_STRING_RESULTS)){
-
-            this.results = intent.getStringExtra(KEY_STRING_RESULTS);
-
-            Log.d(LOG_TAG, "displaying results");
-            Log.d(LOG_TAG, results);
-
-            TextView resultsTextView = (TextView) findViewById(R.id.resultsText);
-            resultsTextView.setText(results);
-        }
-        */
 
         Log.d(LOG_TAG, "trying to get data from store");
 
@@ -136,6 +118,26 @@ public class DisplayResultsView extends AppCompatActivity {
     }
 
     private void handleSaveResult(final CountResult result){
+
+
+
+            Intent intent = getIntent();
+
+            if (intent.hasExtra(VIEWING_SAVED_RESULT)) {
+
+                Boolean noSave = false;
+
+                try {
+                    noSave = intent.getExtras().getBoolean(VIEWING_SAVED_RESULT);
+                } catch(NullPointerException e){
+                    e.printStackTrace();
+                }
+                if (noSave) return;
+
+                Log.d(LOG_TAG, "checked intent extras");
+            }
+
+
 
         Runnable r = new Runnable() {
             @Override

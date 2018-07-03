@@ -2,6 +2,7 @@ package com.lyubomyr.wordscounter;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ public class SavedCountsViewCellAdapter extends ArrayAdapter {
     private Context context;
     private List<CountResult> countResults;
     private SavedResultsViewModel savedResultsViewModel;
+    private Store store;
 
     SavedCountsViewCellAdapter(Context context, List<CountResult> results, SavedResultsViewModel savedResultsViewModel){
         super(context, R.layout.saved_results_list_item);
@@ -50,6 +52,7 @@ public class SavedCountsViewCellAdapter extends ArrayAdapter {
         TextView title;
         TextView subtitle;
         TextView createdAt;
+        Button viewButton;
         Button removeButton;
         int position;
     }
@@ -93,6 +96,15 @@ public class SavedCountsViewCellAdapter extends ArrayAdapter {
         holder.createdAt = convertView.findViewById(R.id.saved_results_list_item_date);
         holder.createdAt.setText(result.created_at.toString());
 
+        holder.viewButton = convertView.findViewById(R.id.saved_results_list_item_view_button);
+        holder.viewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG_TAG, "view clicked");
+                viewResult(result);
+            }
+        });
+
         holder.removeButton = convertView.findViewById(R.id.saved_results_list_item_remove_button);
         holder.removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +115,15 @@ public class SavedCountsViewCellAdapter extends ArrayAdapter {
         });
 
         return convertView;
+    }
+
+    private void viewResult(CountResult result){
+        store = Store.getInstance();
+        store.setCountResult(result);
+
+        Intent showResults = new Intent(context, DisplayResultsView.class);
+        showResults.putExtra(DisplayResultsView.VIEWING_SAVED_RESULT, true);
+        context.startActivity(showResults);
     }
 
     private void removeResult(final String resultId){

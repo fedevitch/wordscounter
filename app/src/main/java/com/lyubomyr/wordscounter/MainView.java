@@ -157,6 +157,7 @@ public class MainView extends AppCompatActivity {
 
     protected void showResultsView(CountResult countResult) {
         store.setCountResult(countResult);
+        this.showResults.putExtra(DisplayResultsView.VIEWING_SAVED_RESULT, false);
         startActivity(this.showResults);
     }
 

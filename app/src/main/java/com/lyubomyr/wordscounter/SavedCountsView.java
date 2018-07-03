@@ -82,13 +82,6 @@ public class SavedCountsView extends AppCompatActivity {
         Log.d(LOG_TAG, "displaying list");
         SavedCountsViewCellAdapter cellAdapter = new SavedCountsViewCellAdapter(this, results, savedResultsViewModel);
         savedCountResultsListView.setAdapter(cellAdapter);
-        savedCountResultsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(LOG_TAG, "Item clicked");
-                Log.d(LOG_TAG, String.valueOf(position));
-            }
-        });
     }
 
 }

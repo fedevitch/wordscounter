@@ -34,4 +34,7 @@ dependencies {
     // Lifecycle components
     implementation "android.arch.lifecycle:extensions:$rootProject.archLifecycleVersion"
     annotationProcessor "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
+
+    //MPAndroid chart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 }

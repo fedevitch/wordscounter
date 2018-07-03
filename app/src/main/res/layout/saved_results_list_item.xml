@@ -36,6 +36,14 @@
         android:textSize="@dimen/list_item_subtitle_text_size" />
 
     <Button
+        android:id="@+id/saved_results_list_item_view_button"
+        android:layout_width="42dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/saved_results_list_item_subtitle"
+        android:layout_toStartOf="@+id/saved_results_list_item_remove_button"
+        android:background="@drawable/ic_pageview" />
+
+    <Button
         android:id="@+id/saved_results_list_item_remove_button"
         android:layout_width="42dp"
         android:layout_height="wrap_content"
