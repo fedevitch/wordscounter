@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,8 +54,6 @@ public class DisplayResultsView extends AppCompatActivity {
 
     private final Store store = Store.getInstance();
 
-    protected String results;
-
     private int[] colors = {
             Color.rgb(100,221,23),
             Color.rgb(128,0,128), Color.rgb(255,136,0),
@@ -79,10 +79,10 @@ public class DisplayResultsView extends AppCompatActivity {
 
         Log.d(LOG_TAG, String.valueOf(results.getWordsVocabulary().size()));
 
-        if(store.getSettings().getDisplayChart()) {
-            buildCharactersChart();
-            buildWordsChart();
-        }
+//        if(store.getSettings().getDisplayChart()) {
+//            buildCharactersChart();
+//            buildWordsChart();
+//        }
 
         Log.d(LOG_TAG, "charts built");
         Log.d(LOG_TAG, String.valueOf(new Date().getTime()));
@@ -105,102 +105,40 @@ public class DisplayResultsView extends AppCompatActivity {
 
     }
 
-    private void buildCharactersChart(){
-        CountResult result = this.store.getCountResult();
-        List<PieEntry> entries = new ArrayList<>();
-
-
-        for(WordChar character : result.getCharsVocabulary()){
-            PieEntry entry = new PieEntry((float) character.getAppearsCount(), character.getWordCharacter().toString());
-
-            entries.add(entry);
-        }
-
-        PieDataSet characterSet = new PieDataSet(entries, "Characters");
-
-        characterSet.setColors(colors);
-        PieData characterData = new PieData(characterSet);
-        PieChart characterChart = findViewById(R.id.characters_chart);
-        characterChart.setUsePercentValues(false);
-        characterChart.setCenterText("Characters");
-        characterChart.setData(characterData);
-        characterChart.invalidate();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_results_view, menu);
+        return true;
     }
 
-    private class WordChartYAxisValueFormatter implements IAxisValueFormatter {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(LOG_TAG, "item selected");
+        Log.d(LOG_TAG, String.valueOf(item.getItemId()));
 
-        private DecimalFormat mFormat;
-
-        WordChartYAxisValueFormatter() {
-            mFormat = new DecimalFormat("#########");
+        switch(item.getItemId()){
+            case R.id.results_view_menu_goto_words_chart:
+                Log.d(LOG_TAG, "goto word chart activity");
+                openWordsChart();
+                return true;
+            case R.id.results_view_menu_goto_chars_chart:
+                Log.d(LOG_TAG, "goto chars activity");
+                openCharsChart();
+                return true;
         }
 
-        @Override
-        public String getFormattedValue(float value, AxisBase yAxis){
-            return mFormat.format(value);
-        }
-
+        return super.onOptionsItemSelected(item);
     }
 
-    private class WordChartXAxisValueFormatter implements IAxisValueFormatter {
-
-        private String[] values;
-
-        WordChartXAxisValueFormatter(final String[] values){
-            this.values = values;
-        }
-
-        @Override
-        public String getFormattedValue(float value, AxisBase xAxis){
-            //Log.d(LOG_TAG, String.valueOf(value));
-            //Log.d(LOG_TAG, String.valueOf((int) value));
-            return this.values[(int) value];
-        }
-
+    private void openCharsChart(){
+        Intent intent = new Intent(this, ChartCharsView.class);
+        startActivity(intent);
     }
 
-    private void buildWordsChart(){
-        CountResult result = this.store.getCountResult();
-        List<BarEntry> entries = new ArrayList<>();
-
-        BarData wordData = new BarData();
-
-        int index = 0;
-        List<String> lbls = new ArrayList<>();
-        for(Word word: result.getWordsVocabulary()){
-            BarEntry entry = new BarEntry(index++, (float) word.getAppearsCount());
-            entries.add(entry);
-
-            BarDataSet wordSet = new BarDataSet(entries, word.getWord());
-
-            wordSet.setColor(colors[new Random().nextInt(colors.length)]);
-
-            lbls.add(word.getWord());
-
-            wordData.addDataSet(wordSet);
-        }
-
-        HorizontalBarChart wordsChart = findViewById(R.id.words_chart);
-
-
-        YAxis leftAxis = wordsChart.getAxisLeft();
-        leftAxis.setValueFormatter(new WordChartYAxisValueFormatter());
-        leftAxis.setGranularity(1f);
-        YAxis rightAxis = wordsChart.getAxisRight();
-        rightAxis.setValueFormatter(new WordChartYAxisValueFormatter());
-        rightAxis.setGranularity(1f);
-
-        final String[] labels = lbls.toArray(new String[] {});
-        XAxis xAxis = wordsChart.getXAxis();
-        xAxis.setValueFormatter(new WordChartXAxisValueFormatter(labels));
-        xAxis.setGranularity(0.3f);
-
-        //wordsChart.getLayoutParams().height = result.getWordsVocabulary().size() * 100;
-        wordsChart.setDrawValueAboveBar(true);
-
-
-        wordsChart.setData(wordData);
-        wordsChart.invalidate();
+    private void openWordsChart(){
+        Intent intent = new Intent(this, ChartWordsView.class);
+        startActivity(intent);
     }
 
     private String getResultString(CountResult countResult){
@@ -222,60 +160,27 @@ public class DisplayResultsView extends AppCompatActivity {
         return result;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        Log.d(LOG_TAG, "item selected");
-        Log.d(LOG_TAG, String.valueOf(item.getItemId()));
-
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                /*
-                if (NavUtils.shouldUpRecreateTask(this.getParent(), this.getIntent())) {
-                    Log.d(LOG_TAG, "recreate");
-                    // This activity is NOT part of this app's task, so create a new task
-                    // when navigating up, with a synthesized back stack.
-                    TaskStackBuilder.create(this.getParent())
-                            // Add all of this activity's parents to the back stack
-                            .addNextIntentWithParentStack(this.getParent().getParentActivityIntent())
-                            // Navigate up to the closest parent
-                            .startActivities();
-                } else {
-                    Log.d(LOG_TAG, "nav");
-                    //This activity is part of this app's task, so simply
-                    //navigate up to the logical parent activity.
-                    NavUtils.navigateUpTo(this, this.getParentActivityIntent());
-                }
-                */
-                //Log.d(LOG_TAG, "home");
-
-                //NavUtils.navigateUpFromSameTask(this);
-
-                super.onBackPressed();
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     private void handleSaveResult(final CountResult result){
 
 
 
-            Intent intent = getIntent();
+        Intent intent = getIntent();
 
-            if (intent.hasExtra(VIEWING_SAVED_RESULT)) {
+        if (intent.hasExtra(VIEWING_SAVED_RESULT)) {
 
-                Boolean noSave = false;
+            Boolean noSave = false;
 
-                try {
-                    noSave = intent.getExtras().getBoolean(VIEWING_SAVED_RESULT);
-                } catch(NullPointerException e){
-                    e.printStackTrace();
-                }
-                if (noSave) return;
-
-                Log.d(LOG_TAG, "checked intent extras");
+            try {
+                noSave = intent.getExtras().getBoolean(VIEWING_SAVED_RESULT);
+            } catch(NullPointerException e){
+                e.printStackTrace();
             }
+            if (noSave) return;
+
+            Log.d(LOG_TAG, "checked intent extras");
+        } else {
+            return;
+        }
 
 
 

@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.lyubomyr.wordscounter.MainView">
+    tools:context="com.lyubomyr.wordscounter.DisplayResultsView">
 
     <!--<include layout="@layout/app_header" />-->
 
@@ -28,18 +28,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.github.mikephil.charting.charts.HorizontalBarChart
-                android:id="@+id/words_chart"
-                android:layout_width="match_parent"
-                android:layout_height="400dp"
-                />
-
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/characters_chart"
-                android:layout_width="match_parent"
-                android:layout_height="400dp"
-                />
-
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -50,10 +38,6 @@
                     android:id="@+id/resultsText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginTop="198dp"
-                    app:layout_alignSelf="flex_end"
                     android:text="results.." />
 
             </ScrollView>

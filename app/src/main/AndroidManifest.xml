@@ -47,6 +47,24 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainView" tools:replace="android:value" />
         </activity>
+        <activity
+            android:name=".ChartCharsView"
+            android:label="@string/app_name"
+            android:parentActivityName=".DisplayResultsView"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DisplayResultsView" tools:replace="android:value" />
+        </activity>
+        <activity
+            android:name=".ChartWordsView"
+            android:label="@string/app_name"
+            android:parentActivityName=".DisplayResultsView"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DisplayResultsView" tools:replace="android:value" />
+        </activity>
     </application>
 
 </manifest>

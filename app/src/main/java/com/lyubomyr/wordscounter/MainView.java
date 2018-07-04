@@ -132,6 +132,26 @@ public class MainView extends AppCompatActivity {
         initializeSettings();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_input_text, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(LOG_TAG, "item selected");
+        Log.d(LOG_TAG, String.valueOf(item.getItemId()));
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     protected void startCount(View view) {
         wordCounter = new WordCounter();
         text = inputText.getText().toString();
@@ -159,26 +179,6 @@ public class MainView extends AppCompatActivity {
         store.setCountResult(countResult);
         this.showResults.putExtra(DisplayResultsView.VIEWING_SAVED_RESULT, false);
         startActivity(this.showResults);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_input_text, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(LOG_TAG, "item selected");
-        Log.d(LOG_TAG, String.valueOf(item.getItemId()));
-
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void initializeSettings(){
