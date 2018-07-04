@@ -28,19 +28,16 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
-
-
             <com.github.mikephil.charting.charts.HorizontalBarChart
                 android:id="@+id/words_chart"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="400dp"
                 />
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/characters_chart"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="400dp"
                 />
 
 

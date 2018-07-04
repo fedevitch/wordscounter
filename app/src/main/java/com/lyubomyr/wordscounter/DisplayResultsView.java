@@ -1,13 +1,11 @@
 package com.lyubomyr.wordscounter;
 
-import android.arch.lifecycle.ViewModelProvider;
+
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v4.view.GravityCompat;
+
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -29,14 +27,17 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.lyubomyr.wordscounter.Storage.SavedResultEntity;
+
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.lyubomyr.wordscounter.Storage.SavedResultJoined;
 import com.lyubomyr.wordscounter.Storage.SavedResultsViewModel;
 import com.lyubomyr.wordscounter.Storage.SettingsViewModel;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
+
 import java.util.Random;
 
 /**
@@ -53,6 +54,13 @@ public class DisplayResultsView extends AppCompatActivity {
 
     protected String results;
 
+    private int[] colors = {
+            Color.rgb(100,221,23),
+            Color.rgb(128,0,128), Color.rgb(255,136,0),
+            Color.rgb(255,0,0), Color.rgb(255,127,80),
+            Color.rgb(47,95,255)
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,20 +73,34 @@ public class DisplayResultsView extends AppCompatActivity {
 
 
         Log.d(LOG_TAG, "trying to get data from store");
+        Log.d(LOG_TAG, String.valueOf(new Date().getTime()));
 
         CountResult results = this.store.getCountResult();
 
         Log.d(LOG_TAG, String.valueOf(results.getWordsVocabulary().size()));
 
-        buildCharactersChart();
-        buildWordsChart();
+        if(store.getSettings().getDisplayChart()) {
+            buildCharactersChart();
+            buildWordsChart();
+        }
 
-        //ToDo: remove when table view ready
-        String resultString = getResultString(results);
-        TextView resultsTextView = findViewById(R.id.resultsText);
-        resultsTextView.setText(resultString);
+        Log.d(LOG_TAG, "charts built");
+        Log.d(LOG_TAG, String.valueOf(new Date().getTime()));
+
+        if(store.getSettings().getDisplayTable()) {
+            //ToDo: remove when table view ready
+            String resultString = getResultString(results);
+            TextView resultsTextView = findViewById(R.id.resultsText);
+            resultsTextView.setText(resultString);
+        }
+
+        Log.d(LOG_TAG, "table built");
+        Log.d(LOG_TAG, String.valueOf(new Date().getTime()));
 
         handleSaveResult(results);
+
+        Log.d(LOG_TAG, "handlesave Done");
+        Log.d(LOG_TAG, String.valueOf(new Date().getTime()));
 
 
     }
@@ -95,9 +117,7 @@ public class DisplayResultsView extends AppCompatActivity {
         }
 
         PieDataSet characterSet = new PieDataSet(entries, "Characters");
-        int[] colors = { Color.rgb(100,221,23), Color.rgb(128,0,128), Color.rgb(255,136,0),
-                Color.rgb(255,0,0), Color.rgb(255,127,80), Color.rgb(47,95,255)
-        };
+
         characterSet.setColors(colors);
         PieData characterData = new PieData(characterSet);
         PieChart characterChart = findViewById(R.id.characters_chart);
@@ -107,6 +127,38 @@ public class DisplayResultsView extends AppCompatActivity {
         characterChart.invalidate();
     }
 
+    private class WordChartYAxisValueFormatter implements IAxisValueFormatter {
+
+        private DecimalFormat mFormat;
+
+        WordChartYAxisValueFormatter() {
+            mFormat = new DecimalFormat("#########");
+        }
+
+        @Override
+        public String getFormattedValue(float value, AxisBase yAxis){
+            return mFormat.format(value);
+        }
+
+    }
+
+    private class WordChartXAxisValueFormatter implements IAxisValueFormatter {
+
+        private String[] values;
+
+        WordChartXAxisValueFormatter(final String[] values){
+            this.values = values;
+        }
+
+        @Override
+        public String getFormattedValue(float value, AxisBase xAxis){
+            //Log.d(LOG_TAG, String.valueOf(value));
+            //Log.d(LOG_TAG, String.valueOf((int) value));
+            return this.values[(int) value];
+        }
+
+    }
+
     private void buildWordsChart(){
         CountResult result = this.store.getCountResult();
         List<BarEntry> entries = new ArrayList<>();
@@ -114,21 +166,36 @@ public class DisplayResultsView extends AppCompatActivity {
         BarData wordData = new BarData();
 
         int index = 0;
+        List<String> lbls = new ArrayList<>();
         for(Word word: result.getWordsVocabulary()){
             BarEntry entry = new BarEntry(index++, (float) word.getAppearsCount());
             entries.add(entry);
 
             BarDataSet wordSet = new BarDataSet(entries, word.getWord());
 
+            wordSet.setColor(colors[new Random().nextInt(colors.length)]);
+
+            lbls.add(word.getWord());
+
             wordData.addDataSet(wordSet);
         }
 
         HorizontalBarChart wordsChart = findViewById(R.id.words_chart);
 
-        XAxis xAxis = wordsChart.getXAxis();
-        xAxis.setGranularity(10f);
 
-        wordsChart.getLayoutParams().height = result.getWordsVocabulary().size() * 50;
+        YAxis leftAxis = wordsChart.getAxisLeft();
+        leftAxis.setValueFormatter(new WordChartYAxisValueFormatter());
+        leftAxis.setGranularity(1f);
+        YAxis rightAxis = wordsChart.getAxisRight();
+        rightAxis.setValueFormatter(new WordChartYAxisValueFormatter());
+        rightAxis.setGranularity(1f);
+
+        final String[] labels = lbls.toArray(new String[] {});
+        XAxis xAxis = wordsChart.getXAxis();
+        xAxis.setValueFormatter(new WordChartXAxisValueFormatter(labels));
+        xAxis.setGranularity(0.3f);
+
+        //wordsChart.getLayoutParams().height = result.getWordsVocabulary().size() * 100;
         wordsChart.setDrawValueAboveBar(true);
 
 
