@@ -1,7 +1,9 @@
 package com.lyubomyr.wordscounter;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -29,6 +31,8 @@ public class SavedCountsView extends AppCompatActivity {
 
     private List<CountResult> countResults;
 
+    private SavedCountsViewCellAdapter cellAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
@@ -46,7 +50,8 @@ public class SavedCountsView extends AppCompatActivity {
         store = Store.getInstance();
 
         getSavedCountResults();
-        displayList(this.countResults);
+        //displayList(this.countResults);
+
     }
 
     private void getSavedCountResults(){
@@ -56,13 +61,33 @@ public class SavedCountsView extends AppCompatActivity {
             public void run() {
                 savedResultsViewModel = ViewModelProviders.of(SavedCountsView.this).get(SavedResultsViewModel.class);
 
-                countResults = new ArrayList<>();
 
                 List<SavedResultJoined> saveResultsDb = savedResultsViewModel.getCountResults();
+
+                countResults = new ArrayList<>();
                 ListIterator<SavedResultJoined> it = saveResultsDb.listIterator();
                 while(it.hasNext()){
                     countResults.add(new CountResult(it.next()));
                 }
+
+
+                displayList(countResults);
+
+                // LiveData
+                savedResultsViewModel.getAllCountresults().observe(SavedCountsView.this, new Observer<List<SavedResultJoined>>() {
+                    @Override
+                    public void onChanged(@Nullable List<SavedResultJoined> savedResultJoineds) {
+                        countResults = new ArrayList<>();
+                        ListIterator<SavedResultJoined> it = savedResultJoineds.listIterator();
+                        while(it.hasNext()){
+                            countResults.add(new CountResult(it.next()));
+                        }
+
+                        cellAdapter.setCountResultsList(countResults);
+
+                    }
+                });
+
             }
         };
 
@@ -80,7 +105,7 @@ public class SavedCountsView extends AppCompatActivity {
 
     private void displayList(List<CountResult> results){
         Log.d(LOG_TAG, "displaying list");
-        SavedCountsViewCellAdapter cellAdapter = new SavedCountsViewCellAdapter(this, results, savedResultsViewModel);
+        cellAdapter = new SavedCountsViewCellAdapter(this, results, savedResultsViewModel);
         savedCountResultsListView.setAdapter(cellAdapter);
     }
 

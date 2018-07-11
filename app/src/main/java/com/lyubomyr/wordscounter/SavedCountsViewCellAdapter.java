@@ -117,6 +117,11 @@ public class SavedCountsViewCellAdapter extends ArrayAdapter {
         return convertView;
     }
 
+    public void setCountResultsList(List<CountResult> newData){
+        this.countResults = newData;
+        notifyDataSetChanged();
+    }
+
     private void viewResult(CountResult result){
         store = Store.getInstance();
         store.setCountResult(result);

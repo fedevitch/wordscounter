@@ -2,6 +2,7 @@ package com.lyubomyr.wordscounter.Storage;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.LiveData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,10 @@ public class SavedResultsViewModel extends AndroidViewModel {
         savedResultsRepository = new SavedResultsRepository(application);
         wordRepository = new WordRepository(application);
         wordCharRepository = new WordCharRepository(application);
+    }
+
+    public LiveData<List<SavedResultJoined>> getAllCountresults(){
+        return savedResultsRepository.getAllCountResults();
     }
 
     public List<SavedResultJoined> getCountResults(){

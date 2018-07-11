@@ -1,6 +1,9 @@
 package com.lyubomyr.wordscounter.Storage;
 
 import android.app.Application;
+import android.arch.core.util.Function;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Transformations;
 import android.os.AsyncTask;
 
 import com.lyubomyr.wordscounter.CountResult;
@@ -15,11 +18,19 @@ public class SavedResultsRepository {
     private WordDAO wordDAO;
     private WordCharDAO wordCharDAO;
 
+    private LiveData<List<SavedResultJoined>> mAllCountResults;
+
     SavedResultsRepository(Application application){
         AppDatabase db = AppDatabase.getDatabase(application);
         savedResultDAO = db.savedResultDAO();
         wordDAO = db.wordDAO();
         wordCharDAO = db.wordCharDAO();
+
+        mAllCountResults = savedResultDAO.getSavedResults();
+    }
+
+    LiveData<List<SavedResultJoined>> getAllCountResults(){
+        return mAllCountResults;
     }
 
     public List<SavedResultJoined> getCountResults(){
