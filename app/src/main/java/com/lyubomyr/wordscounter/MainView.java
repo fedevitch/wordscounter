@@ -130,6 +130,18 @@ public class MainView extends AppCompatActivity {
         );
 
         initializeSettings();
+
+        // Get intent, action and MIME type
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if ("text/plain".equals(type)) {
+                handleTextSendTo(intent); // Handle text being sent
+            }
+        }
+
     }
 
     @Override
@@ -213,17 +225,30 @@ public class MainView extends AppCompatActivity {
 
     }
 
-    public void openSettings(){
+    private void handleTextSendTo(Intent intent){
+        String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+        if(sharedText != null) {
+            Log.d(LOG_TAG, sharedText);
+            inputText.setText(sharedText);
+        }
+    }
+
+    private void handleHtmlSendTo(Intent intent){
+        String sharedText = intent.getStringExtra(Intent.EXTRA_HTML_TEXT);
+        Log.d(LOG_TAG, sharedText);
+    }
+
+    private void openSettings(){
         Intent settingsIntent = new Intent(this, SettingsView.class);
         startActivity(settingsIntent);
     }
 
-    public void openSavedCounts(){
+    private void openSavedCounts(){
         Intent historyIntent = new Intent(this, SavedCountsView.class);
         startActivity(historyIntent);
     }
 
-    public void closeApplication(){
+    private void closeApplication(){
         finishAndRemoveTask();
     }
 }
