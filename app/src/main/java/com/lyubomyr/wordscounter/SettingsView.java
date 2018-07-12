@@ -38,7 +38,7 @@ public class SettingsView extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //toolbar.setTitle(R.string.view_title_settings);
-        toolbar.setSubtitle(R.string.view_title_settings);
+        //toolbar.setSubtitle(R.string.view_title_settings);
         settingsListView = findViewById(R.id.settings_list);
 
         Log.d(LOG_TAG, "settings started");

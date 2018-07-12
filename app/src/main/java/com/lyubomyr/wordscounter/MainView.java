@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.URLUtil;
 import android.widget.EditText;
@@ -21,7 +20,6 @@ import android.widget.EditText;
 import com.lyubomyr.wordscounter.Storage.SettingsViewModel;
 
 import org.jsoup.Jsoup;
-import org.w3c.dom.Document;
 
 import java.io.IOException;
 
@@ -144,12 +142,12 @@ public class MainView extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_input_text, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_input_text, menu);
+//        return true;
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

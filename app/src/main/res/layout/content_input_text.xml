@@ -7,7 +7,7 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingTop="@dimen/activity_vertical_top_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:layout_gravity="bottom|end"
     tools:context="com.lyubomyr.wordscounter.MainView"
@@ -16,9 +16,8 @@
 
     <EditText
         android:id="@+id/inputText"
-        android:layout_width="331dp"
-        android:layout_height="473dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="top"
         android:singleLine="false"
         app:layout_constraintBottom_toBottomOf="parent"

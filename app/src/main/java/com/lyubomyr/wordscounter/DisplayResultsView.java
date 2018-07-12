@@ -12,6 +12,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -54,54 +58,22 @@ public class DisplayResultsView extends AppCompatActivity {
 
     private final Store store = Store.getInstance();
 
-    private int[] colors = {
-            Color.rgb(100,221,23),
-            Color.rgb(128,0,128), Color.rgb(255,136,0),
-            Color.rgb(255,0,0), Color.rgb(255,127,80),
-            Color.rgb(47,95,255)
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.results_view);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.results_toolbar);
+        Toolbar toolbar = findViewById(R.id.results_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setTitle(R.string.view_title_results);
 
-
-        Log.d(LOG_TAG, "trying to get data from store");
-        Log.d(LOG_TAG, String.valueOf(new Date().getTime()));
-
         CountResult results = this.store.getCountResult();
 
-        Log.d(LOG_TAG, String.valueOf(results.getWordsVocabulary().size()));
-
-//        if(store.getSettings().getDisplayChart()) {
-//            buildCharactersChart();
-//            buildWordsChart();
-//        }
-
-        Log.d(LOG_TAG, "charts built");
-        Log.d(LOG_TAG, String.valueOf(new Date().getTime()));
-
-        if(store.getSettings().getDisplayTable()) {
-            //ToDo: remove when table view ready
-            String resultString = getResultString(results);
-            TextView resultsTextView = findViewById(R.id.resultsText);
-            resultsTextView.setText(resultString);
-        }
-
-        Log.d(LOG_TAG, "table built");
-        Log.d(LOG_TAG, String.valueOf(new Date().getTime()));
+        buildResultsTable(results);
 
         handleSaveResult(results);
-
-        Log.d(LOG_TAG, "handlesave Done");
-        Log.d(LOG_TAG, String.valueOf(new Date().getTime()));
-
 
     }
 
@@ -141,6 +113,68 @@ public class DisplayResultsView extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void buildResultsTable(CountResult countResult){
+        int defaultPadding = 10;
+
+        TableLayout tableLayout = findViewById(R.id.results_table);
+        tableLayout.setPadding(defaultPadding, defaultPadding, defaultPadding, defaultPadding);
+
+        TableRow charsTitleRow = new TableRow(DisplayResultsView.this);
+        TextView charsTitleTextView = new TextView(DisplayResultsView.this);
+        charsTitleTextView.setPadding(defaultPadding, defaultPadding, defaultPadding, defaultPadding);
+
+        charsTitleTextView.setText(String.format(Locale.getDefault(), "%s: %d", "Characters", countResult.getCharsCount()));
+        charsTitleRow.addView(charsTitleTextView);
+
+        tableLayout.addView(charsTitleRow);
+
+        //loop for chars table
+        for(WordChar wordChar: countResult.getCharsVocabulary()){
+            TableRow charRow = new TableRow(DisplayResultsView.this);
+
+            TextView charRowTextView = new TextView(DisplayResultsView.this);
+            charRowTextView.setPadding(defaultPadding, defaultPadding, defaultPadding, defaultPadding);
+            charRowTextView.setText(String.format(Locale.getDefault(), "%c", wordChar.getWordCharacter()));
+            charRow.addView(charRowTextView);
+
+            TextView charCountTextView = new TextView(DisplayResultsView.this);
+            charCountTextView.setPadding(defaultPadding, defaultPadding, defaultPadding, defaultPadding);
+            charCountTextView.setText(String.format(Locale.getDefault(), "%d", wordChar.getAppearsCount()));
+            charRow.addView(charCountTextView);
+
+            tableLayout.addView(charRow);
+        }
+
+
+        TableRow wordsTitleRow = new TableRow(DisplayResultsView.this);
+        TextView wordsTitleTextView = new TextView(DisplayResultsView.this);
+        wordsTitleTextView.setPadding(defaultPadding, defaultPadding, defaultPadding, defaultPadding);
+        wordsTitleTextView.setText(String.format(Locale.getDefault(), "%s: %d", "Words", countResult.getWordsCount()));
+        wordsTitleRow.addView(wordsTitleTextView);
+
+        tableLayout.addView(wordsTitleRow);
+
+        //loop for words table
+        for(Word word: countResult.getWordsVocabulary()){
+            TableRow charRow = new TableRow(DisplayResultsView.this);
+
+            TextView charRowTextView = new TextView(DisplayResultsView.this);
+            charRowTextView.setPadding(defaultPadding, defaultPadding, defaultPadding, defaultPadding);
+            charRowTextView.setText(String.format(Locale.getDefault(), "%s", word.getWord()));
+            charRow.addView(charRowTextView);
+
+            TextView charCountTextView = new TextView(DisplayResultsView.this);
+            charCountTextView.setPadding(defaultPadding, defaultPadding, defaultPadding, defaultPadding);
+            charCountTextView.setText(String.format(Locale.getDefault(), "%d", word.getAppearsCount()));
+            charRow.addView(charCountTextView);
+
+            tableLayout.addView(charRow);
+        }
+
+
+    }
+
+    // deprecated
     private String getResultString(CountResult countResult){
         String result = "";
 
