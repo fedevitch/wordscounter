@@ -90,6 +90,10 @@ public class DisplayResultsView extends AppCompatActivity {
         Log.d(LOG_TAG, String.valueOf(item.getItemId()));
 
         switch(item.getItemId()){
+            case R.id.results_view_menu_goto_text:
+                Log.d(LOG_TAG, "view text");
+                openViewText();
+                return true;
             case R.id.results_view_menu_goto_words_chart:
                 Log.d(LOG_TAG, "goto word chart activity");
                 openWordsChart();
@@ -110,6 +114,12 @@ public class DisplayResultsView extends AppCompatActivity {
 
     private void openWordsChart(){
         Intent intent = new Intent(this, ChartWordsView.class);
+        startActivity(intent);
+    }
+
+    private void openViewText(){
+        Intent intent = new Intent(this, MainView.class);
+        intent.putExtra(VIEWING_SAVED_RESULT, true);
         startActivity(intent);
     }
 

@@ -140,6 +140,11 @@ public class MainView extends AppCompatActivity {
             }
         }
 
+        if(intent.hasExtra(DisplayResultsView.VIEWING_SAVED_RESULT) &&
+           intent.getBooleanExtra(DisplayResultsView.VIEWING_SAVED_RESULT, true)){
+            inputText.setText(store.getCountResult().text);
+        }
+
     }
 
 //    @Override
