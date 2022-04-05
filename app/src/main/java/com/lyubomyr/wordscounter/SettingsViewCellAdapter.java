@@ -2,6 +2,7 @@ package com.lyubomyr.wordscounter;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +22,9 @@ import java.util.List;
 
 public class SettingsViewCellAdapter extends ArrayAdapter {
 
-    private List<SettingsEntity> settings;
-    private Context context;
-    private String LOG_TAG = "SETTING_ITEM_ADAPTER";
+    private final List<SettingsEntity> settings;
+    private final Context context;
+    private final String LOG_TAG = "SETTING_ITEM_ADAPTER";
 
 
     public SettingsViewCellAdapter(Context context, List<SettingsEntity> settings){
@@ -45,10 +46,11 @@ public class SettingsViewCellAdapter extends ArrayAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent){
+    public View getView(int position, View convertView, @NonNull ViewGroup parent){
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         SettingsEntity setting = settings.get(position);
 
+        assert inflater != null;
         if(setting.setting_type.equals(Settings.Types._switch.toString())){
             return renderSwitch(inflater, parent, setting);
         } else if(setting.setting_type.equals(Settings.Types.checkbox.toString())){
@@ -184,7 +186,7 @@ public class SettingsViewCellAdapter extends ArrayAdapter {
                 final NumberPicker num_picker = d.findViewById(R.id.dialogNumPicker);
                 num_picker.setMinValue(0);
                 num_picker.setMaxValue(1000);
-                num_picker.setValue(Integer.valueOf(setting.setting_value));
+                num_picker.setValue(Integer.parseInt(setting.setting_value));
                 num_picker.setWrapSelectorWheel(true);
                 OK.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -210,38 +212,35 @@ public class SettingsViewCellAdapter extends ArrayAdapter {
     }
 
     private View renderTextModal(View view, final SettingsEntity setting){
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(LOG_TAG, "opening modal here");
+        view.setOnClickListener(v -> {
+            Log.d(LOG_TAG, "opening modal here");
 
-                final Dialog d = new Dialog(getContext());
-                d.setContentView(R.layout.settings_text_dialog);
+            final Dialog d = new Dialog(getContext());
+            d.setContentView(R.layout.settings_text_dialog);
 
-                final EditText editText = d.findViewById(R.id.dialogInputText);
-                editText.setText(setting.setting_value);
+            final EditText editText = d.findViewById(R.id.dialogInputText);
+            editText.setText(setting.setting_value);
 
-                Button OK = d.findViewById(R.id.dialogInputText_ok);
-                Button Cancel = d.findViewById(R.id.dialogInputText_cancel);
+            Button OK = d.findViewById(R.id.dialogInputText_ok);
+            Button Cancel = d.findViewById(R.id.dialogInputText_cancel);
 
-                OK.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        setting.setting_value = editText.getText().toString();
-                        onChangeSetting(setting);
-                        d.dismiss();
-                    }
-                });
-                Cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        d.dismiss();
-                    }
-                });
+            OK.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setting.setting_value = editText.getText().toString();
+                    onChangeSetting(setting);
+                    d.dismiss();
+                }
+            });
+            Cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    d.dismiss();
+                }
+            });
 
-                d.show();
+            d.show();
 
-            }
         });
 
         return view;

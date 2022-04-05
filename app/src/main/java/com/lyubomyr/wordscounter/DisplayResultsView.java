@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.List;
 
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -54,7 +55,7 @@ public class DisplayResultsView extends AppCompatActivity {
 
     public static final String VIEWING_SAVED_RESULT = "ViewingSavedResult";
 
-    private String LOG_TAG = "RESULTS_VIEW";
+    private final String LOG_TAG = "RESULTS_VIEW";
 
     private final Store store = Store.getInstance();
 
@@ -66,7 +67,7 @@ public class DisplayResultsView extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.results_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         toolbar.setTitle(R.string.view_title_results);
 
         CountResult results = this.store.getCountResult();
@@ -102,9 +103,9 @@ public class DisplayResultsView extends AppCompatActivity {
                 Log.d(LOG_TAG, "goto chars activity");
                 openCharsChart();
                 return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void openCharsChart(){
@@ -186,22 +187,22 @@ public class DisplayResultsView extends AppCompatActivity {
 
     // deprecated
     private String getResultString(CountResult countResult){
-        String result = "";
+        StringBuilder result = new StringBuilder();
 
         for(int i = 0; i < countResult.getWordsVocabulary().size(); i++){
             Word word = countResult.getWordsVocabulary().get(i);
-            result += word.getWord() + "    " + word.getAppearsCount() + "\n";
+            result.append(word.getWord()).append("    ").append(word.getAppearsCount()).append("\n");
         }
 
         for(int i = 0; i < countResult.getCharsVocabulary().size(); i++){
             WordChar c = countResult.getCharsVocabulary().get(i);
-            result += c.getWordCharacter() + "  " + c.getAppearsCount() + "\n";
+            result.append(c.getWordCharacter()).append("  ").append(c.getAppearsCount()).append("\n");
         }
 
-        result += "Words: " + countResult.getWordsCount() + "\n";
-        result += "Chars: " + countResult.getCharsCount() + "\n";
+        result.append("Words: ").append(countResult.getWordsCount()).append("\n");
+        result.append("Chars: ").append(countResult.getCharsCount()).append("\n");
 
-        return result;
+        return result.toString();
     }
 
     private void handleSaveResult(final CountResult result){
@@ -212,10 +213,10 @@ public class DisplayResultsView extends AppCompatActivity {
 
         if (intent.hasExtra(VIEWING_SAVED_RESULT)) {
 
-            Boolean noSave = false;
+            boolean noSave = false;
 
             try {
-                noSave = intent.getExtras().getBoolean(VIEWING_SAVED_RESULT);
+                noSave = Objects.requireNonNull(intent.getExtras()).getBoolean(VIEWING_SAVED_RESULT);
             } catch(NullPointerException e){
                 e.printStackTrace();
             }

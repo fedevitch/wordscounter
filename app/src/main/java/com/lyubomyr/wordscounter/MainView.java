@@ -1,5 +1,6 @@
 package com.lyubomyr.wordscounter;
 
+import android.app.ActivityOptions;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -26,7 +27,7 @@ import java.io.IOException;
 
 public class MainView extends AppCompatActivity {
 
-    private String LOG_TAG = "MAIN_VIEW";
+    private final String LOG_TAG = "MAIN_VIEW";
 
     private Store store;
 
@@ -38,14 +39,19 @@ public class MainView extends AppCompatActivity {
 
     private Intent showResults;
 
+    private static final int enterAnimation = android.R.anim.slide_in_left;
+    private static final int exitAnimation = android.R.anim.slide_out_right;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(enterAnimation, exitAnimation);
         setContentView(R.layout.main_view);
         Toolbar toolbar = findViewById(R.id.toolbar);
         inputText = findViewById(R.id.inputText);
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
+        assert actionbar != null;
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
@@ -54,78 +60,41 @@ public class MainView extends AppCompatActivity {
         this.showResults = new Intent(this, DisplayResultsView.class);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startCount();
-            }
-        });
+        fab.setOnClickListener(view -> startCount());
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        // set item as selected to persist highlight
-                        menuItem.setChecked(true);
-                        // close drawer when item is tapped
-                        mDrawerLayout.closeDrawers();
+                menuItem -> {
+                    // set item as selected to persist highlight
+                    menuItem.setChecked(true);
+                    // close drawer when item is tapped
+                    mDrawerLayout.closeDrawers();
 
-                        // Add code here to update the UI based on the item selected
-                        // For example, swap UI fragments here
+                    // Add code here to update the UI based on the item selected
+                    // For example, swap UI fragments here
 
-                        switch(menuItem.getItemId()) {
-                            case R.id.nav_new:
-                                Log.d(LOG_TAG, "new");
-                                return true;
-                            case R.id.nav_history:
-                                Log.d(LOG_TAG, "history");
-                                openSavedCounts();
-                                return true;
-                            case R.id.nav_settings:
-                                Log.d(LOG_TAG, "settings");
-                                openSettings();
-                                return true;
-                            case R.id.nav_exit:
-                                Log.d(LOG_TAG, "exit");
-                                closeApplication();
-                                return true;
-                        }
-
-                        return true;
+                    switch(menuItem.getItemId()) {
+                        case R.id.nav_new:
+                            Log.d(LOG_TAG, "new");
+                            return true;
+                        case R.id.nav_history:
+                            Log.d(LOG_TAG, "history");
+                            openSavedCounts();
+                            return true;
+                        case R.id.nav_settings:
+                            Log.d(LOG_TAG, "settings");
+                            openSettings();
+                            return true;
+                        case R.id.nav_exit:
+                            Log.d(LOG_TAG, "exit");
+                            closeApplication();
+                            return true;
+                        default:
+                            return true;
                     }
                 });
-
-//        mDrawerLayout.addDrawerListener(
-//                new DrawerLayout.DrawerListener() {
-//                    @Override
-//                    public void onDrawerSlide(View drawerView, float slideOffset) {
-//                        // Respond when the drawer's position changes
-//                        //Log.d(LOG_TAG, "slide");
-//                    }
-//
-//                    @Override
-//                    public void onDrawerOpened(View drawerView) {
-//                        // Respond when the drawer is opened
-//                        //Log.d(LOG_TAG, "opened");
-//                    }
-//
-//                    @Override
-//                    public void onDrawerClosed(View drawerView) {
-//                        // Respond when the drawer is closed
-//                        //Log.d(LOG_TAG, "closed");
-//                    }
-//
-//                    @Override
-//                    public void onDrawerStateChanged(int newState) {
-//                        // Respond when the drawer motion state changes
-//                        //Log.d(LOG_TAG, "changed");
-//                        //Log.d(LOG_TAG, String.valueOf(newState));
-//                    }
-//                }
-//        );
 
         initializeSettings();
 
@@ -147,24 +116,17 @@ public class MainView extends AppCompatActivity {
 
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_input_text, menu);
-//        return true;
-//    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(LOG_TAG, "item selected");
         Log.d(LOG_TAG, String.valueOf(item.getItemId()));
 
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
+        if (item.getItemId() == android.R.id.home) {
+            mDrawerLayout.openDrawer(GravityCompat.START);
+            return true;
         }
         return super.onOptionsItemSelected(item);
+
     }
 
     private void startCount() {
@@ -185,18 +147,15 @@ public class MainView extends AppCompatActivity {
 
     private void initializeSettings(){
 
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                SettingsViewModel settingsViewModel = ViewModelProviders.of(MainView.this).get(SettingsViewModel.class);
+        Runnable r = () -> {
+            SettingsViewModel settingsViewModel = ViewModelProviders.of(MainView.this).get(SettingsViewModel.class);
 
-                Settings settings = new Settings(settingsViewModel);
+            Settings settings = new Settings(settingsViewModel);
 
-                store.setSettings(settings);
+            store.setSettings(settings);
 
-                Log.d(LOG_TAG, "Settings set");
+            Log.d(LOG_TAG, "Settings set");
 
-            }
         };
 
 
@@ -261,14 +220,24 @@ public class MainView extends AppCompatActivity {
         }
     }
 
+    private Bundle getNavAnimation(){
+        return ActivityOptions
+                .makeCustomAnimation(
+                        this,
+                        enterAnimation,
+                        exitAnimation
+                )
+                .toBundle();
+    }
+
     private void openSettings(){
         Intent settingsIntent = new Intent(this, SettingsView.class);
-        startActivity(settingsIntent);
+        startActivity(settingsIntent, getNavAnimation());
     }
 
     private void openSavedCounts(){
         Intent historyIntent = new Intent(this, SavedCountsView.class);
-        startActivity(historyIntent);
+        startActivity(historyIntent, getNavAnimation());
     }
 
     private void closeApplication(){

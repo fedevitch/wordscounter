@@ -18,16 +18,15 @@ import com.lyubomyr.wordscounter.Storage.SettingsEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
 
 public class SavedCountsView extends AppCompatActivity {
 
-    private String LOG_TAG = "Saved counts view";
+    private final String LOG_TAG = "Saved counts view";
 
     private SavedResultsViewModel savedResultsViewModel;
 
     private ListView savedCountResultsListView;
-
-    private Store store;
 
     private List<CountResult> countResults;
 
@@ -40,14 +39,14 @@ public class SavedCountsView extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.saved_results_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         //toolbar.setTitle(R.string.view_title_settings);
         //toolbar.setSubtitle(R.string.view_title_settings);
         savedCountResultsListView = findViewById(R.id.saved_results_list);
 
         Log.d(LOG_TAG, "settings started");
 
-        store = Store.getInstance();
+        Store store = Store.getInstance();
 
         getSavedCountResults();
         //displayList(this.countResults);
@@ -65,9 +64,8 @@ public class SavedCountsView extends AppCompatActivity {
                 List<SavedResultJoined> saveResultsDb = savedResultsViewModel.getCountResults();
 
                 countResults = new ArrayList<>();
-                ListIterator<SavedResultJoined> it = saveResultsDb.listIterator();
-                while(it.hasNext()){
-                    countResults.add(new CountResult(it.next()));
+                for (SavedResultJoined savedResultJoined : saveResultsDb) {
+                    countResults.add(new CountResult(savedResultJoined));
                 }
 
 
@@ -78,9 +76,9 @@ public class SavedCountsView extends AppCompatActivity {
                     @Override
                     public void onChanged(@Nullable List<SavedResultJoined> savedResultJoineds) {
                         countResults = new ArrayList<>();
-                        ListIterator<SavedResultJoined> it = savedResultJoineds.listIterator();
-                        while(it.hasNext()){
-                            countResults.add(new CountResult(it.next()));
+                        assert savedResultJoineds != null;
+                        for (SavedResultJoined savedResultJoined : savedResultJoineds) {
+                            countResults.add(new CountResult(savedResultJoined));
                         }
 
                         cellAdapter.setCountResultsList(countResults);

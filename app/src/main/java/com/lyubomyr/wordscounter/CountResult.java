@@ -18,14 +18,14 @@ public class CountResult {
     public String text;
     public Date created_at;
 
-    private String resultId;
+    private final String resultId;
 
-    private List<Word> wordsVocabulary;
-    private List<WordChar> charsVocabulary;
+    private final List<Word> wordsVocabulary;
+    private final List<WordChar> charsVocabulary;
     private int wordsCount;
     private int charsCount;
 
-    private String LOG_TAG = "COUNT_RESULT";
+    private final String LOG_TAG = "COUNT_RESULT";
 
     CountResult() {
         this.wordsVocabulary = new ArrayList<Word>();
@@ -45,14 +45,12 @@ public class CountResult {
         this.created_at = dbEntity.created_at;
         this.resultId = dbEntity.id;
 
-        ListIterator<WordEntity> it_w = dbEntity.words.listIterator();
-        while (it_w.hasNext()){
-            this.wordsVocabulary.add(new Word(it_w.next()));
+        for (WordEntity wordEntity : dbEntity.words) {
+            this.wordsVocabulary.add(new Word(wordEntity));
         }
 
-        ListIterator<WordCharEntity> it_c = dbEntity.characters.listIterator();
-        while (it_c.hasNext()){
-            this.charsVocabulary.add(new WordChar(it_c.next()));
+        for (WordCharEntity wordCharEntity : dbEntity.characters) {
+            this.charsVocabulary.add(new WordChar(wordCharEntity));
         }
 
 
@@ -78,9 +76,8 @@ public class CountResult {
         if(this.wordsVocabulary.isEmpty()){
             return false;
         }
-        ListIterator<Word> wordListIterator = this.wordsVocabulary.listIterator();
-        while(wordListIterator.hasNext()){
-            if(wordListIterator.next().getWord().equals(word.getWord())){
+        for (Word value : this.wordsVocabulary) {
+            if (value.getWord().equals(word.getWord())) {
                 return true;
             }
         }
@@ -91,9 +88,8 @@ public class CountResult {
         if(this.wordsVocabulary.isEmpty()){
             return false;
         }
-        ListIterator<Word> wordListIterator = this.wordsVocabulary.listIterator();
-        while(wordListIterator.hasNext()){
-            if(wordListIterator.next().getWord().equals(word)){
+        for (Word value : this.wordsVocabulary) {
+            if (value.getWord().equals(word)) {
                 return true;
             }
         }
@@ -104,9 +100,8 @@ public class CountResult {
         if(this.charsVocabulary.isEmpty()){
             return false;
         }
-        ListIterator<WordChar> charListIterator = this.charsVocabulary.listIterator();
-        while(charListIterator.hasNext()){
-            if(charListIterator.next().getWordCharacter().equals(character.getWordCharacter())){
+        for (WordChar wordChar : this.charsVocabulary) {
+            if (wordChar.getWordCharacter().equals(character.getWordCharacter())) {
                 return true;
             }
         }
@@ -117,9 +112,8 @@ public class CountResult {
         if(this.charsVocabulary.isEmpty()){
             return false;
         }
-        ListIterator<WordChar> charListIterator = this.charsVocabulary.listIterator();
-        while(charListIterator.hasNext()){
-            if(charListIterator.next().getWordCharacter().equals(character)){
+        for (WordChar wordChar : this.charsVocabulary) {
+            if (wordChar.getWordCharacter().equals(character)) {
                 return true;
             }
         }
@@ -153,10 +147,8 @@ public class CountResult {
             return;
         }
 
-        ListIterator<Word> it = this.wordsVocabulary.listIterator();
-        while (it.hasNext()){
-            Word vocWord = it.next();
-            if(vocWord.getWord().equals(word.getWord())){
+        for (Word vocWord : this.wordsVocabulary) {
+            if (vocWord.getWord().equals(word.getWord())) {
                 vocWord.incrementAppearsCount();
                 return;
             }
@@ -170,10 +162,8 @@ public class CountResult {
             return;
         }
 
-        ListIterator<Word> it = this.wordsVocabulary.listIterator();
-        while (it.hasNext()){
-            Word vocWord = it.next();
-            if(vocWord.getWord().equals(word)){
+        for (Word vocWord : this.wordsVocabulary) {
+            if (vocWord.getWord().equals(word)) {
                 vocWord.incrementAppearsCount();
                 return;
             }
@@ -187,10 +177,8 @@ public class CountResult {
             return;
         }
 
-        ListIterator<WordChar> it = this.charsVocabulary.listIterator();
-        while (it.hasNext()){
-            WordChar vocChar = it.next();
-            if(vocChar.getWordCharacter().equals(character.getWordCharacter())){
+        for (WordChar vocChar : this.charsVocabulary) {
+            if (vocChar.getWordCharacter().equals(character.getWordCharacter())) {
                 vocChar.incrementAppearsCount();
                 return;
             }
@@ -204,10 +192,8 @@ public class CountResult {
             return;
         }
 
-        ListIterator<WordChar> it = this.charsVocabulary.listIterator();
-        while (it.hasNext()){
-            WordChar vocChar = it.next();
-            if(vocChar.getWordCharacter().equals(character)){
+        for (WordChar vocChar : this.charsVocabulary) {
+            if (vocChar.getWordCharacter().equals(character)) {
                 vocChar.incrementAppearsCount();
                 return;
             }
@@ -226,16 +212,12 @@ public class CountResult {
         dbEntity.created_at = new Date();
 
         dbEntity.words = new ArrayList<>();
-        ListIterator<Word> it_w = this.wordsVocabulary.listIterator();
-        while (it_w.hasNext()){
-            Word w = it_w.next();
+        for (Word w : this.wordsVocabulary) {
             dbEntity.words.add(w.getDbEntity(dbEntity.id));
         }
 
         dbEntity.characters = new ArrayList<>();
-        ListIterator<WordChar> it_c = this.charsVocabulary.listIterator();
-        while (it_c.hasNext()){
-            WordChar c = it_c.next();
+        for (WordChar c : this.charsVocabulary) {
             dbEntity.characters.add(c.getDbEntity(dbEntity.id));
         }
 
