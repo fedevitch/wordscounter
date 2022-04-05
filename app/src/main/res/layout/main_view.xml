@@ -15,7 +15,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include layout="@layout/content_input_text" />
+        <include
+            layout="@layout/content_input_text"
+            android:animationCache="true"
+            android:layoutAnimation="@android:anim/slide_in_left" />
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
