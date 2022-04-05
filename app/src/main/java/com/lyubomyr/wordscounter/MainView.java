@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,7 +27,7 @@ import java.io.IOException;
 
 public class MainView extends AppCompatActivity {
 
-    private String LOG_TAG = "MAIN_VIEW";
+    private final String LOG_TAG = "MAIN_VIEW";
 
     private Store store;
 
@@ -46,6 +47,7 @@ public class MainView extends AppCompatActivity {
         inputText = findViewById(R.id.inputText);
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
+        assert actionbar != null;
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
@@ -67,7 +69,7 @@ public class MainView extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                         // set item as selected to persist highlight
                         menuItem.setChecked(true);
                         // close drawer when item is tapped
@@ -92,9 +94,9 @@ public class MainView extends AppCompatActivity {
                                 Log.d(LOG_TAG, "exit");
                                 closeApplication();
                                 return true;
+                            default:
+                                return true;
                         }
-
-                        return true;
                     }
                 });
 
@@ -159,12 +161,12 @@ public class MainView extends AppCompatActivity {
         Log.d(LOG_TAG, "item selected");
         Log.d(LOG_TAG, String.valueOf(item.getItemId()));
 
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
+        if (item.getItemId() == android.R.id.home) {
+            mDrawerLayout.openDrawer(GravityCompat.START);
+            return true;
         }
         return super.onOptionsItemSelected(item);
+
     }
 
     private void startCount() {
@@ -185,18 +187,15 @@ public class MainView extends AppCompatActivity {
 
     private void initializeSettings(){
 
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                SettingsViewModel settingsViewModel = ViewModelProviders.of(MainView.this).get(SettingsViewModel.class);
+        Runnable r = () -> {
+            SettingsViewModel settingsViewModel = ViewModelProviders.of(MainView.this).get(SettingsViewModel.class);
 
-                Settings settings = new Settings(settingsViewModel);
+            Settings settings = new Settings(settingsViewModel);
 
-                store.setSettings(settings);
+            store.setSettings(settings);
 
-                Log.d(LOG_TAG, "Settings set");
+            Log.d(LOG_TAG, "Settings set");
 
-            }
         };
 
 

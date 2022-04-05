@@ -21,7 +21,7 @@ public class Settings {
 
     public List<SettingsEntity> settingsDb;
     private final SettingsViewModel settingsViewModel;
-    private String LOG_TAG = "SETTINGS_HANDLER";
+    private final String LOG_TAG = "SETTINGS_HANDLER";
 
     public enum Names {
         save_results, num_of_records, ignored_symbols,
@@ -122,7 +122,7 @@ public class Settings {
                 } else if (setting.setting_name.equals(Names.save_results.toString())) {
                     this.saveResults = setting.setting_value.equals("true");
                 } else if (setting.setting_name.equals(Names.num_of_records.toString())) {
-                    this.numOfRecords = Integer.valueOf(setting.setting_value);
+                    this.numOfRecords = Integer.parseInt(setting.setting_value);
                 } else if (setting.setting_name.equals(Names.ignored_symbols.toString())) {
                     this.ignoredSymbols = setting.setting_value;
                 }

@@ -3,7 +3,7 @@ package com.lyubomyr.wordscounter;
 import com.lyubomyr.wordscounter.Storage.WordCharEntity;
 
 public class WordChar {
-    private Character wordCharacter;
+    private final Character wordCharacter;
     private int appearsCount;
 
     WordChar(char c){

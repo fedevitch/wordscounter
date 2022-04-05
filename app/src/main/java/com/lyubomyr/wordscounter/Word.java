@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Word {
-    private String word;
+    private final String word;
     private int appearsCount;
-    private int charsCount;
-    private List<Character> uniqueChars; //ToDo: use WordChar class instead of Character
+    private final int charsCount;
+    private final List<Character> uniqueChars; //ToDo: use WordChar class instead of Character
     private int uniqueCharsCount;
 
     Word(String word) {

@@ -12,6 +12,7 @@ import com.github.mikephil.charting.data.PieEntry;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ChartCharsView extends AppCompatActivity {
 
@@ -35,7 +36,7 @@ public class ChartCharsView extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.results_chars_chart_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         buildCharactersChart();
 

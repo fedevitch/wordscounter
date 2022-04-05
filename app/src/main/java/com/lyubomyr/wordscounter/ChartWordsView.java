@@ -17,11 +17,12 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class ChartWordsView extends AppCompatActivity {
 
-    private String LOG_TAG = "Words_chart_VIEW";
+    private final String LOG_TAG = "Words_chart_VIEW";
 
     private final Store store = Store.getInstance();
 
@@ -41,15 +42,15 @@ public class ChartWordsView extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.results_words_chart_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         buildWordsChart();
 
     }
 
-    private class WordChartYAxisValueFormatter implements IAxisValueFormatter {
+    private static class WordChartYAxisValueFormatter implements IAxisValueFormatter {
 
-        private DecimalFormat mFormat;
+        private final DecimalFormat mFormat;
 
         WordChartYAxisValueFormatter() {
             mFormat = new DecimalFormat("#########");
@@ -62,9 +63,9 @@ public class ChartWordsView extends AppCompatActivity {
 
     }
 
-    private class WordChartXAxisValueFormatter implements IAxisValueFormatter {
+    private static class WordChartXAxisValueFormatter implements IAxisValueFormatter {
 
-        private String[] values;
+        private final String[] values;
 
         WordChartXAxisValueFormatter(final String[] values){
             this.values = values;
@@ -86,7 +87,7 @@ public class ChartWordsView extends AppCompatActivity {
         BarData wordData = new BarData();
 
         int index = 0;
-        List<String> lbls = new ArrayList<>();
+        List<String> labelsList = new ArrayList<>();
         for(Word word: result.getWordsVocabulary()){
             BarEntry entry = new BarEntry(index++, (float) word.getAppearsCount());
             entries.add(entry);
@@ -95,7 +96,7 @@ public class ChartWordsView extends AppCompatActivity {
 
             wordSet.setColor(colors[new Random().nextInt(colors.length)]);
 
-            lbls.add(word.getWord());
+            labelsList.add(word.getWord());
 
             wordData.addDataSet(wordSet);
         }
@@ -110,7 +111,7 @@ public class ChartWordsView extends AppCompatActivity {
         rightAxis.setValueFormatter(new WordChartYAxisValueFormatter());
         rightAxis.setGranularity(1f);
 
-        final String[] labels = lbls.toArray(new String[] {});
+        final String[] labels = labelsList.toArray(new String[] {});
         XAxis xAxis = wordsChart.getXAxis();
         xAxis.setValueFormatter(new WordChartXAxisValueFormatter(labels));
         xAxis.setGranularity(0.3f);

@@ -15,11 +15,11 @@ import com.lyubomyr.wordscounter.Storage.SettingsViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SettingsView extends AppCompatActivity {
 
-    private String LOG_TAG = "SETTINGS_VIEW";
-
+    private final String LOG_TAG = "SETTINGS_VIEW";
 
     private SettingsViewModel settingsViewModel;
     private Store store;
@@ -36,9 +36,9 @@ public class SettingsView extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.settings_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //toolbar.setTitle(R.string.view_title_settings);
-        //toolbar.setSubtitle(R.string.view_title_settings);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        // toolbar.setTitle(R.string.view_title_settings);
+        // toolbar.setSubtitle(R.string.view_title_settings);
         settingsListView = findViewById(R.id.settings_list);
 
         Log.d(LOG_TAG, "settings started");
@@ -63,8 +63,6 @@ public class SettingsView extends AppCompatActivity {
 
                 Log.d(LOG_TAG, "Settings set");
 
-                //
-
             }
         };
 
@@ -87,12 +85,9 @@ public class SettingsView extends AppCompatActivity {
         Log.d(LOG_TAG, "displaying list");
         SettingsViewCellAdapter cellAdapter = new SettingsViewCellAdapter(this, settings);
         settingsListView.setAdapter(cellAdapter);
-        settingsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(LOG_TAG, "Item clicked");
-                Log.d(LOG_TAG, String.valueOf(position));
-            }
+        settingsListView.setOnItemClickListener((parent, view, position, id) -> {
+            Log.d(LOG_TAG, "Item clicked");
+            Log.d(LOG_TAG, String.valueOf(position));
         });
     }
 

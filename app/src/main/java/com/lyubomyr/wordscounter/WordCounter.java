@@ -22,21 +22,21 @@ public class WordCounter {
 
     public Boolean resultsReady;
 
-    private List<Word> words;
-    private List<WordChar> chars;
+    private final List<Word> words;
+    private final List<WordChar> chars;
 
     private int wordsCount;
     private int charsCount;
-    private List<String> wordsVocabulary;
-    private List<Integer> word_used;
+    private final List<String> wordsVocabulary;
+    private final List<Integer> word_used;
 
 
-    private List<Character> charactersVocabulary;
-    private List<Integer> characters_used;
+    private final List<Character> charactersVocabulary;
+    private final List<Integer> characters_used;
 
-    private Settings appSettings;
+    private final Settings appSettings;
 
-    private String LOG_TAG = "Word_counter";
+    private final String LOG_TAG = "Word_counter";
 
 
 
@@ -205,9 +205,9 @@ public class WordCounter {
     }
 
     public void startCounting(String text){
-        String chars = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                + "абвгґдеєжзиіїйклмнопрстуфхцчшщьюяАБВГҐДЕЄЖЗИІЇКЛМНОПРСТУФХЦЧШЩЬЮЯ"
-                + "1234567890~_Ⓡ    \n\t";
+//        String chars = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+//                + "абвгґдеєжзиіїйклмнопрстуфхцчшщьюяАБВГҐДЕЄЖЗИІЇКЛМНОПРСТУФХЦЧШЩЬЮЯ"
+//                + "1234567890~_Ⓡ    \n\t";
         String charsToIgnore = this.appSettings.getIgnoredSymbols(); //" .,;:!?+=*-~`  {(//<[]>)}\"\'|&\n\t  \\    ";
 
 

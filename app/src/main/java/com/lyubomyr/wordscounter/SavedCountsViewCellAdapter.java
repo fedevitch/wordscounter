@@ -1,9 +1,8 @@
 package com.lyubomyr.wordscounter;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,21 +10,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.lyubomyr.wordscounter.Storage.SavedResultJoined;
 import com.lyubomyr.wordscounter.Storage.SavedResultsViewModel;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
+
 
 public class SavedCountsViewCellAdapter extends ArrayAdapter {
 
-    private String LOG_TAG = "Saved counts listitem adapter";
-    private Context context;
+    private final String LOG_TAG = "Saved counts adapter";
+    private final Context context;
     private List<CountResult> countResults;
-    private SavedResultsViewModel savedResultsViewModel;
-    private Store store;
+    private final SavedResultsViewModel savedResultsViewModel;
 
     SavedCountsViewCellAdapter(Context context, List<CountResult> results, SavedResultsViewModel savedResultsViewModel){
         super(context, R.layout.saved_results_list_item);
@@ -58,7 +52,7 @@ public class SavedCountsViewCellAdapter extends ArrayAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent){
+    public View getView(int position, View convertView, @NonNull ViewGroup parent){
         final CountResult result = countResults.get(position);
         final ViewHolder holder;
 
@@ -67,6 +61,7 @@ public class SavedCountsViewCellAdapter extends ArrayAdapter {
 
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             try {
+                assert inflater != null;
                 convertView = inflater.inflate(R.layout.saved_results_list_item, parent, false);
                 convertView.setTag(holder);
             } catch (NullPointerException e) {
@@ -86,6 +81,7 @@ public class SavedCountsViewCellAdapter extends ArrayAdapter {
                 title = result.text;
             }
         }
+        assert convertView != null;
         holder.title = convertView.findViewById(R.id.saved_results_list_item_title);
         holder.title.setText(title);
 
@@ -123,7 +119,7 @@ public class SavedCountsViewCellAdapter extends ArrayAdapter {
     }
 
     private void viewResult(CountResult result){
-        store = Store.getInstance();
+        Store store = Store.getInstance();
         store.setCountResult(result);
 
         Intent showResults = new Intent(context, DisplayResultsView.class);
@@ -133,12 +129,7 @@ public class SavedCountsViewCellAdapter extends ArrayAdapter {
 
     private void removeResult(final String resultId){
 
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                savedResultsViewModel.deleteSavedResult(resultId);
-            }
-        };
+        Runnable r = () -> savedResultsViewModel.deleteSavedResult(resultId);
 
         Thread t = new Thread(r);
         t.start();
