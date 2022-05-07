@@ -13,28 +13,41 @@ import java.util.function.Function;
 
 public class WordCounter {
 
-    private List<Word> words;
-    private List<WordChar> chars;
+    public CountResult countResult;
 
-    private int wordsCount;
-    private int charsCount;
-    private List<String> wordsVocabulary;
-    private List<Integer> word_used;
     public List<String> wordStatistics;
-
-    private List<Character> charactersVocabulary;
-    private List<Integer> characters_used;
     public List<String> charStatistics;
 
     public String charset;
 
     public Boolean resultsReady;
 
+    private final List<Word> words;
+    private final List<WordChar> chars;
+
+    private int wordsCount;
+    private int charsCount;
+    private final List<String> wordsVocabulary;
+    private final List<Integer> word_used;
+
+
+    private final List<Character> charactersVocabulary;
+    private final List<Integer> characters_used;
+
+    private final Settings appSettings;
+
+    private final String LOG_TAG = "Word_counter";
+
+
+
+
     WordCounter(){
-        Log.d("DEBUG","called constructor");
+        Log.d(LOG_TAG,"called constructor");
 
         this.resultsReady = false;
         this.charset = "UTF-8";
+
+        this.countResult = new CountResult();
 
         this.wordsCount =  0;
         this.wordsVocabulary = new ArrayList<String>();
@@ -48,6 +61,8 @@ public class WordCounter {
 
         this.words = new ArrayList<Word>();
         this.chars = new ArrayList<WordChar>();
+
+        this.appSettings = Store.getInstance().getSettings();
 
     }
 
@@ -67,6 +82,14 @@ public class WordCounter {
 
     private void compareChar(char s)// функція виявлення нових букв
     {                           //і збільшення індексу, якщо така буква вже зустрічалось
+
+        if(this.countResult.isPresent(s)){
+            this.countResult.incrementCharAppearsCount(s);
+        } else {
+            this.countResult.addNewChar(s);
+        }
+
+        //legacy part
 
         if (this.charactersVocabulary.isEmpty())
         {
@@ -100,7 +123,6 @@ public class WordCounter {
                 }
             }
         }
-        return;
     }
 
     private void compareString(String s)// функція виявлення нових слів
@@ -111,7 +133,15 @@ public class WordCounter {
         {
             this.compareChar(s.charAt(i));
         }
-        Log.d("DEBUG","chars processed");
+        Log.d(LOG_TAG,"chars processed");
+
+        if(this.countResult.isPresent(s)){
+            this.countResult.incrementWordAppearsCount(s);
+        } else {
+            this.countResult.addNewWord(s);
+        }
+
+        //legacy part
 
         if (this.wordsVocabulary.isEmpty())
         {
@@ -121,7 +151,7 @@ public class WordCounter {
         }
         else
         {
-            for (int i = 0; i < this.wordsVocabulary.size(); i++) {
+            for (int i = 0; i <= this.wordsVocabulary.size(); i++) {
                 if (this.wordsVocabulary.get(i).equals(s)) {
                     //слово вже є в словнику, додати до лічильника 1 і вийти
                     this.words.get(i).incrementAppearsCount();
@@ -131,14 +161,15 @@ public class WordCounter {
                     this.wordsCount++;
                     return;
                 } else {
-                    if (i == this.wordsVocabulary.size() - 1)//список пройдено, збігів не знайдено                   {
+                    if (i == this.wordsVocabulary.size() - 1){ //список пройдено, збігів не знайдено
 
                         //додаємо слово до списку
                         this.words.add(new Word(s));
 
-                    //legacy
-                    this.write_to_voc(s);
-                    return;
+                        //legacy
+                        this.write_to_voc(s);
+                        return;
+                    }
                 }
             }
         }
@@ -150,10 +181,10 @@ public class WordCounter {
     {
         if (text.isEmpty()) return;
 
-        Log.d("DEBUG", "find() called ");
+        Log.d(LOG_TAG, "find() called ");
 
-        //Log.d("DEBUG", "trying: " + text);
-        Log.d("DEBUG", "ignored chars: " + ignored_chars);
+        //Log.d(LOG_TAG, "trying: " + text);
+        Log.d(LOG_TAG, "ignored chars: " + ignored_chars);
         StringTokenizer str = new StringTokenizer(text);//пошук
 
         while(str.hasMoreTokens()){
@@ -174,30 +205,34 @@ public class WordCounter {
     }
 
     public void startCounting(String text){
-        String chars = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                + "абвгґдеєжзиіїйклмнопрстуфхцчшщьюяАБВГҐДЕЄЖЗИІЇКЛМНОПРСТУФХЦЧШЩЬЮЯ"
-                + "1234567890~_Ⓡ    \n\t";
-        String charsToIgnore = " .,;:!?+=*-~`  {(//<[]>)}\"\'|&\n\t  \\    ";
+//        String chars = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+//                + "абвгґдеєжзиіїйклмнопрстуфхцчшщьюяАБВГҐДЕЄЖЗИІЇКЛМНОПРСТУФХЦЧШЩЬЮЯ"
+//                + "1234567890~_Ⓡ    \n\t";
+        String charsToIgnore = this.appSettings.getIgnoredSymbols(); //" .,;:!?+=*-~`  {(//<[]>)}\"\'|&\n\t  \\    ";
 
 
 
         if (text.isEmpty()) {
-            System.out.println("empty field found");
+            Log.d(LOG_TAG,"empty field found");
             return;
         }
 
+        this.countResult.text = text;
+
         this.find(text,charsToIgnore);
+
 
     }
 
+    //legacy
     public String getResult(){
         String info = "Слова: \n";
-        System.out.println("Preparing result. Unique words found: " + this.wordsVocabulary.size());
+        Log.d(LOG_TAG, "Preparing result. Unique words found: " + this.wordsVocabulary.size());
         for (int i = 0; i < this.wordsVocabulary.size(); i++){
             info += " " + this.wordsVocabulary.get(i) + "  " + this.word_used.get(i) + " \n";
             double percent = (i+1)/(this.wordsVocabulary.size()/100.0);
             String statusBar = Double.toString(percent);
-            System.out.println(statusBar+"% of results ready");
+            Log.d(LOG_TAG,statusBar+"% of results ready");
         }
 
         info += "Літери: \n";
@@ -212,4 +247,7 @@ public class WordCounter {
         return message + "\n" + info;
     }
 
+    public CountResult getCountResult() {
+        return countResult;
+    }
 }
