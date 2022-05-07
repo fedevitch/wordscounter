@@ -6,19 +6,15 @@ import android.support.annotation.NonNull;
 
 import java.util.Date;
 
-@Entity(tableName = "saved_results")
-public class SavedResultEntity {
-
+@Entity(tableName = "input_text")
+public class InputEntity {
     @PrimaryKey
     @NonNull
     public String id;
-
-    public int words_count;
-
-    public int chars_count;
 
     public String text;
 
     public Date created_at;
 
+    public Date modified_at;
 }

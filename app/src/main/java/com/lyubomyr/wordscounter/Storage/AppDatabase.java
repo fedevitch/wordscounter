@@ -18,6 +18,8 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract SettingsDAO settingsDAO();
 
+    public abstract InputDAO inputDAO();
+
     private static AppDatabase INSTANCE;
 
     public static AppDatabase getDatabase(final Context context) {
