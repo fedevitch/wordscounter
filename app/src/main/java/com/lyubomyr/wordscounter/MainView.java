@@ -12,12 +12,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.MenuItem;
 import android.webkit.URLUtil;
 import android.widget.EditText;
 
+import com.lyubomyr.wordscounter.Storage.InputViewModel;
 import com.lyubomyr.wordscounter.Storage.SettingsViewModel;
 
 import org.jsoup.Jsoup;
@@ -97,6 +100,23 @@ public class MainView extends AppCompatActivity {
                 });
 
         initializeSettings();
+        showSavedText();
+        inputText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                saveInputText(s.toString());
+            }
+        });
 
         // Get intent, action and MIME type
         Intent intent = getIntent();
@@ -143,6 +163,45 @@ public class MainView extends AppCompatActivity {
         store.setCountResult(countResult);
         this.showResults.putExtra(DisplayResultsView.VIEWING_SAVED_RESULT, false);
         startActivity(this.showResults);
+    }
+
+    private void showSavedText() {
+
+        Runnable r = () -> {
+            InputViewModel inputViewModel = ViewModelProviders.of(MainView.this).get(InputViewModel.class);
+
+            String text = inputViewModel.GetSavedText();
+
+            inputText.setText(text);
+        };
+
+        Thread t = new Thread(r);
+        t.start();
+        try {
+            t.join();
+        } catch(Exception e){
+            Log.e(LOG_TAG, "Тред не дочекався");
+            Log.e(LOG_TAG, e.getMessage());
+            e.printStackTrace();
+        }
+
+    }
+
+    private void saveInputText(String text) {
+        Runnable r = () -> {
+            InputViewModel inputViewModel = ViewModelProviders.of(MainView.this).get(InputViewModel.class);
+            inputViewModel.SaveText(text);
+        };
+
+        Thread t = new Thread(r);
+        t.start();
+        try {
+            t.join();
+        } catch(Exception e){
+            Log.e(LOG_TAG, "Тред не дочекався");
+            Log.e(LOG_TAG, e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void initializeSettings(){

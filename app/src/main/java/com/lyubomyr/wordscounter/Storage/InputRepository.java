@@ -9,14 +9,15 @@ public class InputRepository {
 
     private final InputDAO inputDAO;
 
-    private final InputEntity inputEntity;
+    private InputEntity inputEntity;
 
     InputRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
         inputDAO = db.inputDAO();
         inputEntity = GetSavedText();
 
-        if(inputEntity.id == 0) {
+        if(inputEntity == null) {
+            inputEntity = new InputEntity();
             inputEntity.created_at = new Date();
             inputEntity.modified_at = new Date();
             inputEntity.text = "";
