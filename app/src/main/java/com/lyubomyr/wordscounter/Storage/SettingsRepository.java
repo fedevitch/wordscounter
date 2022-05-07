@@ -7,7 +7,7 @@ import java.util.List;
 
 public class SettingsRepository {
 
-    private SettingsDAO settingsDAO;
+    private final SettingsDAO settingsDAO;
 
     SettingsRepository(Application application){
         AppDatabase db = AppDatabase.getDatabase(application);

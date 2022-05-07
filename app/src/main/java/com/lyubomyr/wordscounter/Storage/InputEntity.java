@@ -10,7 +10,7 @@ import java.util.Date;
 public class InputEntity {
     @PrimaryKey
     @NonNull
-    public String id;
+    public int id;
 
     public String text;
 
