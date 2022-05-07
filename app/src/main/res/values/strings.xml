@@ -23,4 +23,6 @@
     <string name="settings_display_chart_hint">Enable chart for results</string>
     <string name="num_picker_ok">OK</string>
     <string name="num_picker_cancel">Cancel</string>
+    <string name="count_button">Count</string>
+    <string name="clear_button">Clear</string>
 </resources>
