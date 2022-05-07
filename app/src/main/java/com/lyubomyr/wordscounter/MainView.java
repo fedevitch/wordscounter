@@ -15,7 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.View;
 import android.view.MenuItem;
 import android.webkit.URLUtil;
 import android.widget.EditText;
@@ -62,8 +61,11 @@ public class MainView extends AppCompatActivity {
 
         this.showResults = new Intent(this, DisplayResultsView.class);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> startCount());
+        FloatingActionButton fabCount = findViewById(R.id.fab_count);
+        fabCount.setOnClickListener(view -> startCount());
+
+        FloatingActionButton fabClear = findViewById(R.id.fab_clear);
+        fabClear.setOnClickListener(view -> clearInputText());
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
@@ -81,6 +83,7 @@ public class MainView extends AppCompatActivity {
                     switch(menuItem.getItemId()) {
                         case R.id.nav_new:
                             Log.d(LOG_TAG, "new");
+                            clearInputText();
                             return true;
                         case R.id.nav_history:
                             Log.d(LOG_TAG, "history");
@@ -197,6 +200,24 @@ public class MainView extends AppCompatActivity {
         t.start();
         try {
             t.join();
+        } catch(Exception e){
+            Log.e(LOG_TAG, "Тред не дочекався");
+            Log.e(LOG_TAG, e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void clearInputText() {
+        Runnable r = () -> {
+            InputViewModel inputViewModel = ViewModelProviders.of(MainView.this).get(InputViewModel.class);
+            inputViewModel.ClearInput();
+        };
+
+        Thread t = new Thread(r);
+        t.start();
+        try {
+            t.join();
+            inputText.setText("");
         } catch(Exception e){
             Log.e(LOG_TAG, "Тред не дочекався");
             Log.e(LOG_TAG, e.getMessage());
